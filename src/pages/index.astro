@@ -45,6 +45,12 @@ if (blogArticles.length === 0) {
 }
 
 const featured = packages.slice(0, 4);
+
+function getPackageTypeIcon(type: string) {
+  if (type === "haji_mujamalah") return "🕋";
+  if (type === "umrah") return "🕌";
+  return "🌙";
+}
 const posts = blogArticles.slice(0, 3);
 
 const hreflang: HreflangEntry[] = [
@@ -140,47 +146,49 @@ function getPackageTypeLabel(type: string) {
         Pilih <span class="text-gradient-gold">Perjalanan Suci</span> Anda
       </h2>
       <p class="mt-4 text-muted-foreground max-w-2xl mx-auto">
-        Dari Haji Mujamalah hingga Umrah Plus Turki, semua paket kami dirancang untuk kenyamanan dan kekhusyukan ibadah Anda.
+        Paket Haji Mujamalah dan Umrah yang dirancang untuk kenyamanan, kekhusyukan, dan kelancaran ibadah Anda.
       </p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid md:grid-cols-2 gap-8">
       {featured.map((pkg) => (
         <a
           href={`/packages/${pkg.slug}`}
           class="group relative flex flex-col rounded-3xl overflow-hidden bg-card border border-border shadow-soft hover:shadow-card transition-all hover:-translate-y-1"
         >
-          <div class="relative aspect-[4/5] overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-b from-navy/20 via-transparent to-navy/80 z-10"></div>
+          <div class="relative aspect-[16/9] overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/90 z-10"></div>
             <div class="absolute inset-0 bg-gold/10 flex items-center justify-center z-0">
-              <svg class="w-20 h-20 text-gold/30" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-              </svg>
+              <span class="text-8xl opacity-30">{getPackageTypeIcon(pkg.packageType)}</span>
             </div>
             <!-- Package type badge -->
             <div class="absolute top-4 left-4 z-20">
-              <span class="px-3 py-1 rounded-full bg-gold/90 text-navy text-xs font-bold uppercase tracking-wider">
+              <span class="px-4 py-1.5 rounded-full bg-gold/90 text-navy text-xs font-bold uppercase tracking-wider">
                 {getPackageTypeLabel(pkg.packageType).id}
               </span>
             </div>
             <!-- Content overlay -->
-            <div class="absolute bottom-0 left-0 right-0 p-5 text-white z-20">
-              <h3 class="font-display font-bold text-2xl leading-tight">{pkg.title.id}</h3>
-              <p class="text-sm text-white/85 mt-1">{pkg.tagline.id}</p>
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-20">
+              <h3 class="font-display font-bold text-3xl">{pkg.title.id}</h3>
+              <p class="text-white/80 mt-1">{pkg.tagline.id}</p>
             </div>
           </div>
-          <div class="p-5 flex items-center justify-between bg-card">
-            <div>
-              <p class="text-[11px] uppercase tracking-wider text-muted-foreground">Mulai dari</p>
-              <p class="font-display font-bold text-lg text-gold">
-                {pkg.tiers[0]?.price || "Hubungi kami"}
-              </p>
+          <div class="p-6">
+            <p class="text-sm text-muted-foreground line-clamp-2 mb-4">{pkg.aboutText.id.slice(0, 120)}...</p>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[11px] uppercase tracking-wider text-muted-foreground">Mulai dari</p>
+                <p class="font-display font-bold text-xl text-gold">
+                  {pkg.tiers[0]?.price || "Hubungi kami"}
+                </p>
+              </div>
+              <span class="inline-flex items-center gap-1 text-sm font-medium text-gold group-hover:underline">
+                Lihat Detail
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </span>
             </div>
-            <span class="grid place-items-center w-11 h-11 rounded-full bg-secondary group-hover:bg-gold group-hover:text-navy transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 7h10v10"/><path d="M7 17 17 7"/>
-              </svg>
-            </span>
           </div>
         </a>
       ))}
