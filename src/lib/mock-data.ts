@@ -21,10 +21,11 @@ export const mockPackages: TravelPackage[] = [
     galleryImages: [
       { url: "/assets/kaabah-masjidil-haram.jpg", alt: { id: "Ka'bah di Masjidil Haram Makkah", en: "Kaaba at Masjidil Haram Makkah" }, order: 1 },
       { url: "/assets/kaabah-night.jpg", alt: { id: "Ka'bah di malam hari", en: "Kaaba at night" }, order: 2 },
-      { url: "/assets/madinah-masjid-nabawi.jpg", alt: { id: "Masjid Nabawi Madinah", en: "Masjid Nabawi Madinah" }, order: 3 },
-      { url: "/assets/madinah-green-dome.jpg", alt: { id: "Kubah Hijau Masjid Nabawi", en: "Green Dome of Masjid Nabawi" }, order: 4 },
-      { url: "/assets/haji-tawaf.jpg", alt: { id: "Jamaah haji melakukan tawaf", en: "Pilgrims performing Tawaf" }, order: 5 },
-      { url: "/assets/saudi-arabia-makkah.jpg", alt: { id: "Pemandangan Makkah Saudi Arabia", en: "View of Makkah Saudi Arabia" }, order: 6 },
+      { url: "/assets/wukuf-arafah.jpg", alt: { id: "Wukuf di Padang Arafah", en: "Standing at Arafah" }, order: 3 },
+      { url: "/assets/haji-tawaf.jpg", alt: { id: "Jamaah haji melakukan tawaf", en: "Pilgrims performing Tawaf" }, order: 4 },
+      { url: "/assets/madinah-masjid-nabawi.jpg", alt: { id: "Masjid Nabawi Madinah", en: "Masjid Nabawi Madinah" }, order: 5 },
+      { url: "/assets/madinah-green-dome.jpg", alt: { id: "Kubah Hijau Masjid Nabawi", en: "Green Dome of Masjid Nabawi" }, order: 6 },
+      { url: "/assets/saudi-arabia-makkah.jpg", alt: { id: "Pemandangan kota Makkah", en: "View of Makkah city" }, order: 7 },
     ],
     tiers: [
       {
