@@ -38,7 +38,9 @@ const otherPackages = packages.filter(p => p.slug !== slug).slice(0, 3);
 >
   <!-- Hero -->
   <section class="relative min-h-[60vh] flex items-end overflow-hidden bg-navy">
-    <div class="absolute inset-0 bg-pattern-islamic opacity-30"></div>
+    <img src={pkg.heroImage} alt={pkg.title.id} class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-navy/50"></div>
+    <div class="absolute inset-0 bg-pattern-islamic opacity-10"></div>
     <div class="absolute inset-0" style="background: var(--gradient-hero);"></div>
     <div class="container-page relative pb-16 pt-32 text-white z-10">
       <a href="/packages" class="inline-flex items-center gap-2 text-sm text-white/60 hover:text-gold transition mb-6">
@@ -70,6 +72,22 @@ const otherPackages = packages.filter(p => p.slug !== slug).slice(0, 3);
       <p class="text-lg text-muted-foreground leading-relaxed">{pkg.aboutText.id}</p>
     </div>
   </section>
+
+  <!-- Gallery -->
+  {pkg.galleryImages.length > 0 && (
+    <section class="bg-cream py-16">
+      <div class="container-page">
+        <h2 class="font-display font-bold text-3xl text-navy text-center mb-12">Galeri Foto</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {pkg.galleryImages.map((img) => (
+            <div class="rounded-2xl overflow-hidden aspect-[4/3] shadow-soft">
+              <img src={img.url} alt={img.alt.id} class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Package Tiers / Pricing -->
   <section class="bg-cream py-16">
@@ -202,10 +220,8 @@ const otherPackages = packages.filter(p => p.slug !== slug).slice(0, 3);
         <div class="grid md:grid-cols-3 gap-6">
           {otherPackages.map((other) => (
             <a href={`/packages/${other.slug}`} class="group rounded-3xl overflow-hidden bg-card border border-border shadow-soft hover:shadow-card transition">
-              <div class="aspect-[5/3] bg-navy flex items-center justify-center relative">
-                <span class="text-4xl opacity-40">
-                  {other.packageType === "haji_mujamalah" ? "🕋" : other.packageType === "umrah" ? "🕌" : "✈️"}
-                </span>
+              <div class="aspect-[5/3] overflow-hidden relative">
+                <img src={other.heroImage} alt={other.title.id} class="w-full h-full object-cover" loading="lazy" />
               </div>
               <div class="p-5">
                 <h3 class="font-display font-bold text-xl text-navy group-hover:text-gold transition">{other.title.id}</h3>

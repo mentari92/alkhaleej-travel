@@ -5,7 +5,7 @@ export const SiteSettingsDefaults: SiteSettings = {
   brandNameEn: "Alkhaleej Travelindo Utama",
   taglineId: "Partner perjalanan Haji & Umrah terpercaya",
   taglineEn: "Your trusted Hajj & Umrah travel partner",
-  logoUrl: "/logo.png",
+  logoUrl: "/logo.svg",
   faviconUrl: null,
   primaryWhatsappNumber: "966563317582",
   supportEmail: "fifi@travelindo-utama.com",

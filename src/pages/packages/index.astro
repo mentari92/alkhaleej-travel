@@ -45,8 +45,10 @@ function getPackageTypeIcon(type: string) {
   settings={settings}
 >
   <!-- Hero -->
-  <section class="bg-navy text-white py-20 mt-16 md:mt-20">
-    <div class="container-page text-center">
+  <section class="relative bg-navy text-white py-20 mt-16 md:mt-20 overflow-hidden">
+    <img src="/assets/kaabah-masjidil-haram.jpg" alt="Masjidil Haram Makkah" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-navy/70"></div>
+    <div class="container-page text-center relative z-10">
       <p class="text-sm font-semibold text-gold uppercase tracking-wider mb-3">Paket Kami</p>
       <h1 class="font-display font-bold text-4xl md:text-6xl">
         Pilih <span class="text-gradient-gold">Perjalanan Suci</span> Anda
@@ -67,11 +69,8 @@ function getPackageTypeIcon(type: string) {
         >
           <!-- Image area -->
           <div class="relative aspect-[16/9] overflow-hidden bg-navy">
-            <div class="absolute inset-0 bg-pattern-islamic opacity-30"></div>
+            <img src={pkg.heroImage} alt={pkg.title.id} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/90 z-10"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-7xl opacity-30">{getPackageTypeIcon(pkg.packageType)}</span>
-            </div>
             <!-- Badge -->
             <div class="absolute top-4 left-4 z-20">
               <span class="px-4 py-1.5 rounded-full bg-gold/90 text-navy text-xs font-bold uppercase tracking-wider">

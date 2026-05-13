@@ -24,16 +24,12 @@ const settings = await (async () => {
       <div class="md:col-span-1">
         <div class="flex items-center gap-3 mb-4">
           <img
-            src={settings.logoUrl || "/logo.png"}
+            src="/logo.svg"
             alt="Alkhaleej Travelindo Utama"
-            class="h-10 w-auto brightness-0 invert"
-            width="40"
-            height="40"
+            class="h-12 w-auto brightness-0 invert"
+            width="160"
+            height="48"
           />
-          <div>
-            <p class="font-display font-bold text-lg">Alkhaleej</p>
-            <p class="text-[10px] uppercase tracking-wider text-white/50">Travelindo Utama</p>
-          </div>
         </div>
         <p class="text-sm text-white/60 leading-relaxed">
           {settings.footerTaglineId || "Partner perjalanan Haji & Umrah terpercaya. Melayani jamaah Indonesia dengan pelayanan premium."}

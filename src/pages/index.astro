@@ -76,7 +76,9 @@ function getPackageTypeLabel(type: string) {
 >
   <!-- Hero Section -->
   <section class="relative min-h-[92vh] flex items-end overflow-hidden bg-navy">
-    <div class="absolute inset-0 bg-pattern-islamic opacity-30"></div>
+    <img src="/assets/kaabah-night.jpg" alt="Ka'bah di malam hari" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+    <div class="absolute inset-0 bg-navy/60"></div>
+    <div class="absolute inset-0 bg-pattern-islamic opacity-20"></div>
     <div class="absolute inset-0" style="background: var(--gradient-hero);"></div>
 
     <div class="container-page relative pb-20 pt-32 text-white z-10">
@@ -157,10 +159,8 @@ function getPackageTypeLabel(type: string) {
           class="group relative flex flex-col rounded-3xl overflow-hidden bg-card border border-border shadow-soft hover:shadow-card transition-all hover:-translate-y-1"
         >
           <div class="relative aspect-[16/9] overflow-hidden">
+            <img src={pkg.heroImage} alt={pkg.title.id} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/90 z-10"></div>
-            <div class="absolute inset-0 bg-gold/10 flex items-center justify-center z-0">
-              <span class="text-8xl opacity-30">{getPackageTypeIcon(pkg.packageType)}</span>
-            </div>
             <!-- Package type badge -->
             <div class="absolute top-4 left-4 z-20">
               <span class="px-4 py-1.5 rounded-full bg-gold/90 text-navy text-xs font-bold uppercase tracking-wider">
