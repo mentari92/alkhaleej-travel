@@ -11,8 +11,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        arabic: ['Amiri', 'serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

@@ -13,12 +13,12 @@
     --gold: 36 58% 42%;
     --gold-light: 40 50% 58%;
     --gold-warm: 38 65% 52%;
+    --emerald-deep: 155 75% 18%;
+    --emerald: 155 65% 32%;
     --teal-deep: 190 60% 15%;
     --teal: 185 50% 28%;
-    --teal-light: 180 40% 45%;
     --navy: 220 50% 10%;
     --cream: 38 45% 94%;
-    --sand: 35 30% 90%;
     --whatsapp: 142 70% 35%;
 
     --background: 38 30% 97%;
@@ -40,6 +40,9 @@
     --border: 38 15% 86%;
     --input: 38 10% 88%;
     --ring: 36 58% 42%;
+
+    --gradient-gold: linear-gradient(135deg, hsl(36 58% 42%) 0%, hsl(40 50% 58%) 100%);
+    --gradient-hero: linear-gradient(180deg, transparent 0%, hsl(220 50% 10% / 0.3) 50%, hsl(220 50% 10% / 0.95) 100%);
   }
 }
 
@@ -61,13 +64,33 @@
   .container-site {
     @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
+  .container-page {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
   .font-arabic {
     font-family: 'Amiri', serif;
+  }
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .text-shadow {
     text-shadow: 0 2px 20px rgba(0,0,0,0.3);
   }
-  .gold-border {
-    border-image: linear-gradient(135deg, hsl(36 58% 42%), hsl(40 50% 58%)) 1;
+  .shadow-soft {
+    box-shadow: 0 8px 30px -12px hsl(220 50% 10% / 0.15);
+  }
+  .shadow-card {
+    box-shadow: 0 14px 40px -16px hsl(220 50% 10% / 0.2);
+  }
+  .shadow-glow {
+    box-shadow: 0 20px 60px -20px hsl(36 58% 42% / 0.4);
+  }
+  .surface-glass {
+    background: hsl(var(--background) / 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 }
