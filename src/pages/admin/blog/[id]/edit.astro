@@ -12,7 +12,7 @@ import BlogEditor from "@/components/admin/BlogEditor.astro";
 import { getArticleById, listAllArticles } from "@/lib/db/blog";
 import { getDB } from "@/lib/db/connection";
 
-const db = getDB(Astro.locals);
+const db = getDB();
 const { id } = Astro.params;
 
 if (!id) {

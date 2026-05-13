@@ -17,7 +17,7 @@ if (!id) {
   return Astro.redirect("/admin/destinations");
 }
 
-const db = getDB(Astro.locals);
+const db = getDB();
 const destination = await getDestinationById(db, id);
 
 if (!destination) {

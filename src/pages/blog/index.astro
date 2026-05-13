@@ -15,8 +15,14 @@ import type { HreflangEntry } from "@/layouts/BaseLayout.astro";
 import type { Locale } from "@/lib/i18n/config";
 
 const locale: Locale = "id";
-const db = getDB();
-const articles = await listPublishedArticles(db, locale);
+
+let articles: any[] = [];
+try {
+  const db = getDB();
+  articles = await listPublishedArticles(db, locale);
+} catch {
+  articles = [];
+}
 
 const hreflang: HreflangEntry[] = [
   { locale: "id", url: "https://infotour.id/blog/" },

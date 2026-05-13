@@ -6,7 +6,8 @@
 import type { Locale } from "../i18n/config";
 import { i18nConfig } from "../i18n/config";
 import { t } from "../i18n/utils";
-import type { Destination, BlogArticle, HreflangEntry } from "../types";
+import type { BlogArticle, HreflangEntry } from "../types";
+import type { Destination } from "../db/destinations";
 
 export interface MetaTags {
   title: string;

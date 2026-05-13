@@ -12,8 +12,13 @@ import { DestinationsAdminList } from "@/components/admin/DestinationsAdminList"
 import { listAllDestinations } from "@/lib/db/destinations";
 import { getDB } from "@/lib/db/connection";
 
-const db = getDB();
-const destinations = await listAllDestinations(db);
+let destinations: any[] = [];
+try {
+  const db = getDB();
+  destinations = await listAllDestinations(db);
+} catch {
+  destinations = [];
+}
 
 // Serialize only the fields the React island needs
 const destinationItems = destinations.map((dest) => ({

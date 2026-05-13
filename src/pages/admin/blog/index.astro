@@ -12,8 +12,13 @@ import { listAllArticles } from "@/lib/db/blog";
 import { getDB } from "@/lib/db/connection";
 import { BlogListIsland } from "@/components/admin/BlogListIsland";
 
-const db = getDB();
-const articles = await listAllArticles(db);
+let articles: any[] = [];
+try {
+  const db = getDB();
+  articles = await listAllArticles(db);
+} catch {
+  articles = [];
+}
 
 // Serialize only the fields the island needs to avoid passing non-serialisable objects.
 const articleSummaries = articles.map((a) => ({

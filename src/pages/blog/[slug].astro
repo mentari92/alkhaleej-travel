@@ -12,10 +12,10 @@ import ArticleContent from "@/components/blog/ArticleContent.astro";
 import RelatedDestinations from "@/components/blog/RelatedDestinations.astro";
 import { getArticleBySlug, getArticleById } from "@/lib/db/blog";
 import { getDestinationById } from "@/lib/db/destinations";
+import type { Destination } from "@/lib/db/destinations";
 import { getDB } from "@/lib/db/connection";
 import { generateMetaTags } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/i18n/config";
-import type { Destination } from "@/lib/types";
 
 const locale: Locale = "id";
 

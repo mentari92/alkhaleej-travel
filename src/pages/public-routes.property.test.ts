@@ -24,7 +24,8 @@
 
 import { describe, it, expect } from "vitest";
 import * as fc from "fast-check";
-import type { Destination, BlogArticle } from "@/lib/types";
+import type { BlogArticle } from "@/lib/types";
+import type { Destination } from "@/lib/db/destinations";
 import type { SiteSettings } from "@/lib/db/site-settings";
 import { SiteSettingsDefaults } from "@/lib/site-settings/defaults";
 
