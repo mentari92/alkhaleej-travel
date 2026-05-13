@@ -1,0 +1,374 @@
+---
+/**
+ * BlogEditor Component
+ * Rich text editing component for blog articles.
+ * Includes fields for title, excerpt, content (HTML), metaDescription,
+ * and option to pair/link articles as translations.
+ * Validates: Requirements 6.3, 6.4, 11.10
+ */
+import type { BlogArticle } from "@/lib/types";
+
+export interface Props {
+  article: BlogArticle;
+  pairableArticles: BlogArticle[];
+}
+
+const { article, pairableArticles } = Astro.props;
+const otherLanguage = article.language === "id" ? "English" : "Bahasa Indonesia";
+const otherLangCode = article.language === "id" ? "EN" : "ID";
+---
+
+<form id="blog-editor-form" class="space-y-6">
+  <!-- Title -->
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Konten Artikel</h3>
+
+    <div class="space-y-4">
+      <!-- Title field -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
+          Judul <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          required
+          value={article.title}
+          class="w-full min-h-[44px] px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors"
+        />
+      </div>
+
+      <!-- Excerpt field -->
+      <div>
+        <label for="excerpt" class="block text-sm font-medium text-gray-700 mb-1">
+          Ringkasan / Excerpt <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="excerpt"
+          name="excerpt"
+          required
+          rows="3"
+          class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors resize-y"
+        >{article.excerpt}</textarea>
+        <p class="mt-1 text-xs text-gray-500">Ringkasan singkat yang ditampilkan di halaman listing blog.</p>
+      </div>
+
+      <!-- Content field (HTML) -->
+      <div>
+        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
+          Konten (HTML) <span class="text-red-500">*</span>
+        </label>
+        <div class="border border-gray-300 rounded-lg overflow-hidden">
+          <!-- Toolbar -->
+          <div class="flex flex-wrap items-center gap-1 px-3 py-2 bg-gray-50 border-b border-gray-300">
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="bold" title="Bold">
+              <strong>B</strong>
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="italic" title="Italic">
+              <em>I</em>
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="h2" title="Heading 2">
+              H2
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="h3" title="Heading 3">
+              H3
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="ul" title="Unordered List">
+              • List
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="link" title="Link">
+              🔗 Link
+            </button>
+            <button type="button" class="toolbar-btn px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200 rounded" data-action="p" title="Paragraph">
+              ¶ P
+            </button>
+          </div>
+          <!-- Textarea -->
+          <textarea
+            id="content"
+            name="content"
+            required
+            rows="16"
+            class="w-full px-3 py-3 text-sm font-mono border-0 focus:ring-0 outline-none resize-y"
+          >{article.content}</textarea>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">Konten artikel dalam format HTML. Gunakan toolbar untuk menyisipkan tag.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO / Meta -->
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">SEO & Meta</h3>
+
+    <div class="space-y-4">
+      <!-- Meta Description -->
+      <div>
+        <label for="metaDescription" class="block text-sm font-medium text-gray-700 mb-1">
+          Meta Description <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="metaDescription"
+          name="metaDescription"
+          required
+          rows="2"
+          maxlength="160"
+          class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors resize-y"
+        >{article.metaDescription}</textarea>
+        <p class="mt-1 text-xs text-gray-500">
+          Deskripsi untuk mesin pencari. Maksimal 160 karakter.
+          <span id="meta-char-count" class="font-medium"></span>
+        </p>
+      </div>
+
+      <!-- Thumbnail URL -->
+      <div>
+        <label for="thumbnailUrl" class="block text-sm font-medium text-gray-700 mb-1">
+          URL Thumbnail
+        </label>
+        <input
+          type="url"
+          id="thumbnailUrl"
+          name="thumbnailUrl"
+          value={article.thumbnailUrl}
+          placeholder="https://example.com/image.jpg"
+          class="w-full min-h-[44px] px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors"
+        />
+      </div>
+
+      <!-- OG Image -->
+      <div>
+        <label for="ogImage" class="block text-sm font-medium text-gray-700 mb-1">
+          OG Image URL
+        </label>
+        <input
+          type="url"
+          id="ogImage"
+          name="ogImage"
+          value={article.ogImage}
+          placeholder="https://example.com/og-image.jpg"
+          class="w-full min-h-[44px] px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Translation Pairing -->
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-900 mb-2">Pasangan Terjemahan</h3>
+    <p class="text-sm text-gray-600 mb-4">
+      Hubungkan artikel ini dengan versi {otherLanguage} ({otherLangCode}) untuk hreflang SEO.
+    </p>
+
+    <div>
+      <label for="pairedArticleId" class="block text-sm font-medium text-gray-700 mb-1">
+        Artikel Pasangan ({otherLangCode})
+      </label>
+      <select
+        id="pairedArticleId"
+        name="pairedArticleId"
+        class="w-full min-h-[44px] px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors bg-white"
+      >
+        <option value="">— Tidak ada pasangan —</option>
+        {pairableArticles.map((a) => (
+          <option value={a.id} selected={article.pairedArticleId === a.id}>
+            [{a.language.toUpperCase()}] {a.title}
+          </option>
+        ))}
+      </select>
+      <p class="mt-1 text-xs text-gray-500">
+        Pilih artikel dalam bahasa lain yang merupakan terjemahan dari artikel ini.
+      </p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
+    <button
+      type="submit"
+      id="save-btn"
+      class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors min-h-[44px] disabled:bg-purple-300 disabled:cursor-not-allowed"
+    >
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      Simpan Perubahan
+    </button>
+
+    {article.status === "draft" && (
+      <button
+        type="button"
+        id="publish-btn"
+        class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors min-h-[44px]"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Simpan & Publikasi
+      </button>
+    )}
+
+    <a
+      href="/admin/blog"
+      class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors min-h-[44px]"
+    >
+      Batal
+    </a>
+  </div>
+
+  <!-- Status messages -->
+  <div id="save-success" class="hidden bg-green-50 border border-green-200 rounded-lg p-4">
+    <p class="text-sm text-green-800 font-medium">✓ Artikel berhasil disimpan.</p>
+  </div>
+  <div id="save-error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
+    <p id="save-error-message" class="text-sm text-red-800 font-medium"></p>
+  </div>
+</form>
+
+<script is:inline define:vars={{ articleId: article.id }}>
+  // Toolbar functionality
+  const contentTextarea = document.getElementById("content");
+  const toolbarBtns = document.querySelectorAll(".toolbar-btn");
+
+  toolbarBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.action;
+      const textarea = contentTextarea;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+
+      let insertion = "";
+      switch (action) {
+        case "bold":
+          insertion = `<strong>${selectedText || "teks tebal"}</strong>`;
+          break;
+        case "italic":
+          insertion = `<em>${selectedText || "teks miring"}</em>`;
+          break;
+        case "h2":
+          insertion = `<h2>${selectedText || "Heading 2"}</h2>`;
+          break;
+        case "h3":
+          insertion = `<h3>${selectedText || "Heading 3"}</h3>`;
+          break;
+        case "ul":
+          insertion = `<ul>\n  <li>${selectedText || "Item"}</li>\n</ul>`;
+          break;
+        case "link":
+          insertion = `<a href="url">${selectedText || "teks link"}</a>`;
+          break;
+        case "p":
+          insertion = `<p>${selectedText || "Paragraf"}</p>`;
+          break;
+      }
+
+      textarea.value =
+        textarea.value.substring(0, start) +
+        insertion +
+        textarea.value.substring(end);
+      textarea.focus();
+      textarea.selectionStart = start + insertion.length;
+      textarea.selectionEnd = start + insertion.length;
+    });
+  });
+
+  // Meta description character count
+  const metaTextarea = document.getElementById("metaDescription");
+  const charCount = document.getElementById("meta-char-count");
+
+  function updateCharCount() {
+    const count = metaTextarea.value.length;
+    charCount.textContent = `(${count}/160)`;
+    charCount.classList.toggle("text-red-600", count > 160);
+  }
+
+  metaTextarea.addEventListener("input", updateCharCount);
+  updateCharCount();
+
+  // Form submission
+  const form = document.getElementById("blog-editor-form");
+  const saveBtn = document.getElementById("save-btn");
+  const publishBtn = document.getElementById("publish-btn");
+  const saveSuccess = document.getElementById("save-success");
+  const saveError = document.getElementById("save-error");
+  const saveErrorMessage = document.getElementById("save-error-message");
+
+  async function saveArticle(publish = false) {
+    saveSuccess.classList.add("hidden");
+    saveError.classList.add("hidden");
+
+    const payload = {
+      title: document.getElementById("title").value.trim(),
+      excerpt: document.getElementById("excerpt").value.trim(),
+      content: document.getElementById("content").value.trim(),
+      metaDescription: document.getElementById("metaDescription").value.trim(),
+      thumbnailUrl: document.getElementById("thumbnailUrl").value.trim(),
+      ogImage: document.getElementById("ogImage").value.trim(),
+      pairedArticleId: document.getElementById("pairedArticleId").value || null,
+    };
+
+    if (publish) {
+      payload.status = "published";
+      payload.publishedAt = new Date().toISOString();
+    }
+
+    // Validate required fields
+    if (!payload.title || !payload.excerpt || !payload.content || !payload.metaDescription) {
+      saveErrorMessage.textContent = "Semua field wajib harus diisi.";
+      saveError.classList.remove("hidden");
+      return;
+    }
+
+    const activeBtn = publish ? publishBtn : saveBtn;
+    activeBtn.disabled = true;
+    const originalText = activeBtn.innerHTML;
+    activeBtn.innerHTML = `
+      <svg class="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Menyimpan...
+    `;
+
+    try {
+      const response = await fetch(`/api/blog/${articleId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        saveSuccess.classList.remove("hidden");
+        if (publish) {
+          window.location.href = "/admin/blog";
+        }
+      } else {
+        saveErrorMessage.textContent = data.error?.message || "Gagal menyimpan artikel.";
+        saveError.classList.remove("hidden");
+      }
+    } catch {
+      saveErrorMessage.textContent = "Tidak dapat terhubung ke server.";
+      saveError.classList.remove("hidden");
+    } finally {
+      activeBtn.disabled = false;
+      activeBtn.innerHTML = originalText;
+    }
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    saveArticle(false);
+  });
+
+  if (publishBtn) {
+    publishBtn.addEventListener("click", () => {
+      if (confirm("Simpan dan publikasikan artikel ini?")) {
+        saveArticle(true);
+      }
+    });
+  }
+</script>

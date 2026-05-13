@@ -1,0 +1,152 @@
+---
+/**
+ * BaseLayout Component
+ * PT Alkhaleej Travelindo Utama — Public layout with SEO meta tags, header, and footer.
+ */
+import "@/styles/globals.css";
+import Header from "@/components/ui/Header.astro";
+import Footer from "@/components/ui/Footer.astro";
+import WhatsAppFAB from "@/components/ui/WhatsAppFAB.astro";
+import { getLocaleFromUrl } from "@/lib/i18n/utils";
+import type { Locale } from "@/lib/i18n/config";
+import type { SiteSettings } from "@/lib/db/site-settings";
+import { SiteSettingsDefaults } from "@/lib/site-settings/defaults";
+import { sanitize } from "@/lib/content/sanitizer";
+
+export interface HreflangEntry {
+  locale: Locale;
+  url: string;
+}
+
+export interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  hreflang?: HreflangEntry[];
+  settings?: SiteSettings;
+}
+
+const {
+  title,
+  description,
+  canonicalUrl,
+  ogImage,
+  ogType = "website",
+  hreflang = [],
+  settings = SiteSettingsDefaults,
+} = Astro.props;
+
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const htmlLang = locale === "id" ? "id" : "en";
+
+const resolvedDescription =
+  description ??
+  (locale === "id"
+    ? settings.defaultMetaDescriptionTemplateId
+    : settings.defaultMetaDescriptionTemplateEn);
+
+const resolvedOgImage = ogImage ?? settings.defaultOgImage ?? undefined;
+const faviconUrl = settings.faviconUrl ?? null;
+const brandName = locale === "id" ? settings.brandNameId : settings.brandNameEn;
+
+const gtmId = settings.gtmContainerId ?? null;
+const ga4Id = !gtmId ? (settings.ga4MeasurementId ?? null) : null;
+
+const customHeadHtml = settings.customHeadHtml
+  ? sanitize(settings.customHeadHtml)
+  : null;
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta -->
+    <title>{title}</title>
+    <meta name="description" content={resolvedDescription} />
+
+    <!-- Canonical URL -->
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={resolvedDescription} />
+    <meta property="og:type" content={ogType} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+    <meta property="og:site_name" content={brandName} />
+
+    <!-- Hreflang links -->
+    {hreflang.map((entry) => (
+      <link rel="alternate" hreflang={entry.locale} href={entry.url} />
+    ))}
+
+    <!-- Favicon -->
+    {faviconUrl ? (
+      <link rel="icon" href={faviconUrl} />
+    ) : (
+      <>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+      </>
+    )}
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Google Tag Manager -->
+    {gtmId && (
+      <script is:inline define:vars={{ gtmId }}>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer', gtmId);
+      </script>
+    )}
+
+    <!-- Google Analytics 4 -->
+    {ga4Id && (
+      <>
+        <script is:inline define:vars={{ ga4Id }} async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+        <script is:inline define:vars={{ ga4Id }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', ga4Id);
+        </script>
+      </>
+    )}
+
+    <!-- Custom head HTML (sanitized) -->
+    {customHeadHtml && <Fragment set:html={customHeadHtml} />}
+
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-background text-foreground antialiased">
+    {gtmId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+        ></iframe>
+      </noscript>
+    )}
+
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer settings={settings} />
+    <WhatsAppFAB settings={settings} />
+  </body>
+</html>

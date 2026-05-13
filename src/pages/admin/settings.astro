@@ -1,0 +1,32 @@
+---
+/**
+ * Admin Settings Page (SSR)
+ * Fetches current site settings server-side and passes them as initial props
+ * to the SettingsForm React island for client-side editing.
+ * Protected by the existing session middleware.
+ * Validates: Requirements 11.1
+ */
+export const prerender = false;
+
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { getDB } from "@/lib/db/connection";
+import { getSiteSettings } from "@/lib/db/site-settings";
+import { SiteSettingsDefaults } from "@/lib/site-settings/defaults";
+import SettingsForm from "@/components/admin/SettingsForm";
+
+const db = getDB();
+const settings = await getSiteSettings(db).catch(() => SiteSettingsDefaults);
+---
+
+<AdminLayout title="Pengaturan Situs">
+  <div class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900">Pengaturan Situs</h2>
+      <p class="mt-1 text-sm text-gray-600">
+        Kelola branding, kontak, hero, SEO, dan analitik situs.
+      </p>
+    </div>
+
+    <SettingsForm client:load settings={settings} />
+  </div>
+</AdminLayout>

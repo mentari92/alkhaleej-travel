@@ -1,0 +1,96 @@
+---
+/**
+ * ArticleContent Component
+ * Renders blog article HTML content with proper heading hierarchy and
+ * typographic styling.
+ * Validates: Requirements 7.3, 5.7
+ */
+import type { BlogArticle } from "@/lib/types";
+import { sanitize } from "@/lib/content/sanitizer";
+
+export interface Props {
+  article: BlogArticle;
+}
+
+const { article } = Astro.props;
+const safeContent = sanitize(article.content);
+---
+
+<article class="article-content max-w-none">
+  <h1 class="text-3xl font-bold md:text-4xl mb-6">{article.title}</h1>
+  <div class="article-body" set:html={safeContent} />
+</article>
+
+<style>
+  .article-body :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: 5rem;
+  }
+  .article-body :global(h3) {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 5rem;
+  }
+  .article-body :global(h4) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .article-body :global(p) {
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+  .article-body :global(a) {
+    color: hsl(var(--primary));
+    text-decoration: underline;
+  }
+  .article-body :global(a:hover) {
+    opacity: 0.8;
+  }
+  .article-body :global(img) {
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    height: auto;
+  }
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+  .article-body :global(ul) {
+    list-style-type: disc;
+  }
+  .article-body :global(ol) {
+    list-style-type: decimal;
+  }
+  .article-body :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+  }
+  .article-body :global(blockquote) {
+    border-left: 4px solid hsl(var(--border));
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: hsl(var(--muted-foreground));
+  }
+  .article-body :global(pre) {
+    background: hsl(var(--muted));
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+  .article-body :global(code) {
+    font-size: 0.875rem;
+  }
+</style>

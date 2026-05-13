@@ -1,0 +1,488 @@
+---
+/**
+ * DestinationForm Component — User-Friendly Design
+ * Bilingual form with tab-based ID/EN fields for destination management.
+ * Designed for non-technical users: no JSON editing required.
+ * Validates: Requirements 5.1, 5.2, 5.3, 5.4, 11.8
+ */
+import type { Destination } from "@/lib/types";
+
+export interface Props {
+  destination?: Destination;
+  action: string;
+  method: "POST" | "PUT";
+}
+
+const { destination, action, method } = Astro.props;
+const isEdit = !!destination;
+---
+
+<form id="destination-form" class="space-y-8" novalidate data-action={action} data-method={method} data-is-edit={String(isEdit)}>
+  <!-- Status message area -->
+  <div id="form-message" class="hidden rounded-xl p-4 text-sm font-medium" role="alert"></div>
+
+  <!-- Language Tabs -->
+  <div class="border-b border-border">
+    <nav class="flex gap-1" aria-label="Tab bahasa">
+      <button
+        type="button"
+        id="tab-id"
+        class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-lagoon text-ocean-deep rounded-t-lg min-h-[44px] transition-colors"
+        aria-selected="true"
+        role="tab"
+      >
+        🇮🇩 Bahasa Indonesia
+      </button>
+      <button
+        type="button"
+        id="tab-en"
+        class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-transparent text-muted-foreground hover:text-foreground rounded-t-lg min-h-[44px] transition-colors"
+        aria-selected="false"
+        role="tab"
+      >
+        🇬🇧 English
+      </button>
+    </nav>
+  </div>
+
+  <!-- ID Language Fields -->
+  <div id="panel-id" class="tab-panel space-y-5" role="tabpanel">
+    <h3 class="font-display font-semibold text-lg text-ocean-deep">Konten Bahasa Indonesia</h3>
+
+    <div>
+      <label for="title_id" class="block text-sm font-medium text-foreground mb-1.5">
+        Nama Destinasi <span class="text-coral">*</span>
+      </label>
+      <input
+        type="text"
+        id="title_id"
+        name="title_id"
+        value={destination?.title.id ?? ""}
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+        placeholder="Contoh: Raja Ampat"
+      />
+    </div>
+
+    <div>
+      <label for="tagline_id" class="block text-sm font-medium text-foreground mb-1.5">
+        Tagline Singkat <span class="text-coral">*</span>
+      </label>
+      <input
+        type="text"
+        id="tagline_id"
+        name="tagline_id"
+        value={destination?.tagline.id ?? ""}
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+        placeholder="Contoh: Surga karang & laguna pirus"
+      />
+      <p class="mt-1 text-xs text-muted-foreground">Deskripsi singkat 1 baris yang menarik perhatian</p>
+    </div>
+
+    <div>
+      <label for="about_text_id" class="block text-sm font-medium text-foreground mb-1.5">
+        Tentang Destinasi <span class="text-coral">*</span>
+      </label>
+      <textarea
+        id="about_text_id"
+        name="about_text_id"
+        rows="4"
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition resize-y"
+        placeholder="Ceritakan tentang destinasi ini — apa yang membuatnya spesial?"
+      >{destination?.aboutText.id ?? ""}</textarea>
+    </div>
+  </div>
+
+  <!-- EN Language Fields -->
+  <div id="panel-en" class="tab-panel space-y-5 hidden" role="tabpanel">
+    <h3 class="font-display font-semibold text-lg text-ocean-deep">English Content</h3>
+
+    <div>
+      <label for="title_en" class="block text-sm font-medium text-foreground mb-1.5">
+        Destination Name <span class="text-coral">*</span>
+      </label>
+      <input
+        type="text"
+        id="title_en"
+        name="title_en"
+        value={destination?.title.en ?? ""}
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+        placeholder="Example: Raja Ampat"
+      />
+    </div>
+
+    <div>
+      <label for="tagline_en" class="block text-sm font-medium text-foreground mb-1.5">
+        Short Tagline <span class="text-coral">*</span>
+      </label>
+      <input
+        type="text"
+        id="tagline_en"
+        name="tagline_en"
+        value={destination?.tagline.en ?? ""}
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+        placeholder="Example: Coral paradise & turquoise lagoons"
+      />
+    </div>
+
+    <div>
+      <label for="about_text_en" class="block text-sm font-medium text-foreground mb-1.5">
+        About Destination <span class="text-coral">*</span>
+      </label>
+      <textarea
+        id="about_text_en"
+        name="about_text_en"
+        rows="4"
+        required
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition resize-y"
+        placeholder="Tell the story of this destination — what makes it special?"
+      >{destination?.aboutText.en ?? ""}</textarea>
+    </div>
+  </div>
+
+  <!-- Shared Fields -->
+  <div class="space-y-5 border-t border-border pt-6">
+    <h3 class="font-display font-semibold text-lg text-ocean-deep">Informasi Umum</h3>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div>
+        <label for="hero_image" class="block text-sm font-medium text-foreground mb-1.5">
+          URL Gambar Utama <span class="text-coral">*</span>
+        </label>
+        <input
+          type="url"
+          id="hero_image"
+          name="hero_image"
+          value={destination?.heroImage ?? ""}
+          required
+          class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+          placeholder="https://example.com/gambar.jpg"
+        />
+        <p class="mt-1 text-xs text-muted-foreground">Link gambar hero yang akan tampil di halaman destinasi</p>
+      </div>
+
+      <div>
+        <label for="whatsapp_number" class="block text-sm font-medium text-foreground mb-1.5">
+          Nomor WhatsApp <span class="text-coral">*</span>
+        </label>
+        <input
+          type="tel"
+          id="whatsapp_number"
+          name="whatsapp_number"
+          value={destination?.whatsappNumber ?? ""}
+          required
+          class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+          placeholder="6281234567890"
+        />
+        <p class="mt-1 text-xs text-muted-foreground">Format: 62 + nomor (tanpa +, spasi, atau strip)</p>
+      </div>
+    </div>
+
+    <div>
+      <label for="status" class="block text-sm font-medium text-foreground mb-1.5">
+        Status Publikasi
+      </label>
+      <select
+        id="status"
+        name="status"
+        class="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-lagoon focus:ring-2 focus:ring-lagoon/20 outline-none transition"
+      >
+        <option value="draft" selected={destination?.status !== "published"}>📝 Draf — belum tampil di website</option>
+        <option value="published" selected={destination?.status === "published"}>✅ Dipublikasi — tampil di website</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Service Package (simplified) -->
+  <div class="space-y-4 border-t border-border pt-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="font-display font-semibold text-lg text-ocean-deep">Paket Wisata</h3>
+        <p class="text-sm text-muted-foreground">Tambahkan paket/layanan yang tersedia</p>
+      </div>
+      <button
+        type="button"
+        id="add-service-btn"
+        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-lagoon bg-lagoon/10 hover:bg-lagoon/20 rounded-lg transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>
+        </svg>
+        Tambah Paket
+      </button>
+    </div>
+    <div id="services-container" class="space-y-4">
+      <!-- Service items will be rendered here -->
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end gap-3 border-t border-border pt-6">
+    <a
+      href="/admin/destinations"
+      class="inline-flex items-center px-5 py-3 text-sm font-medium text-foreground bg-secondary hover:bg-secondary/80 rounded-xl transition-colors min-h-[44px]"
+    >
+      Batal
+    </a>
+    <button
+      type="submit"
+      id="submit-btn"
+      class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-ocean hover:bg-ocean-deep rounded-xl transition-colors min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"/>
+      </svg>
+      {isEdit ? "Simpan Perubahan" : "Buat Destinasi"}
+    </button>
+  </div>
+</form>
+
+<script>
+  // Read config from form data attributes
+  const form = document.getElementById("destination-form") as HTMLFormElement;
+  const action = form?.dataset.action || "";
+  const method = form?.dataset.method || "POST";
+  const isEdit = form?.dataset.isEdit === "true";
+
+  // Track which collection tabs have been opened AND modified in this session.
+  // Only collections in this set will be included in the PUT body.
+  // This prevents sending empty arrays for untouched tabs, which would delete
+  // all existing children in the repository (Requirement 2.6).
+  const touchedTabs = new Set<string>();
+
+  // Tab switching logic
+  const tabId = document.getElementById("tab-id");
+  const tabEn = document.getElementById("tab-en");
+  const panelId = document.getElementById("panel-id");
+  const panelEn = document.getElementById("panel-en");
+
+  function switchTab(activeTab: Element | null, inactiveTab: Element | null, activePanel: Element | null, inactivePanel: Element | null) {
+    if (!activeTab || !inactiveTab || !activePanel || !inactivePanel) return;
+    activeTab.classList.add("border-lagoon", "text-ocean-deep");
+    activeTab.classList.remove("border-transparent", "text-muted-foreground");
+    activeTab.setAttribute("aria-selected", "true");
+
+    inactiveTab.classList.remove("border-lagoon", "text-ocean-deep");
+    inactiveTab.classList.add("border-transparent", "text-muted-foreground");
+    inactiveTab.setAttribute("aria-selected", "false");
+
+    activePanel.classList.remove("hidden");
+    inactivePanel.classList.add("hidden");
+  }
+
+  tabId?.addEventListener("click", () => switchTab(tabId, tabEn, panelId, panelEn));
+  tabEn?.addEventListener("click", () => switchTab(tabEn, tabId, panelEn, panelId));
+
+  // Service packages management
+  const servicesContainer = document.getElementById("services-container");
+  const addServiceBtn = document.getElementById("add-service-btn");
+  let serviceCount = 0;
+
+  // Mark the services collection as touched (admin has modified it)
+  function markServicesTouched() {
+    touchedTabs.add("services");
+  }
+
+  function createServiceCard(data?: { name_id?: string; name_en?: string; price?: string; desc_id?: string; desc_en?: string }, isPrePopulated = false) {
+    serviceCount++;
+    const card = document.createElement("div");
+    card.className = "bg-secondary/30 rounded-xl p-5 space-y-4 relative";
+    card.innerHTML = `
+      <button type="button" class="remove-service absolute top-3 right-3 p-1.5 text-muted-foreground hover:text-coral rounded-lg hover:bg-coral/10 transition" title="Hapus paket">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+      </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Nama Paket (ID)</label>
+          <input type="text" class="svc-name-id w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-lagoon outline-none" placeholder="Contoh: Open Trip" value="${data?.name_id || ''}" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Package Name (EN)</label>
+          <input type="text" class="svc-name-en w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-lagoon outline-none" placeholder="Example: Open Trip" value="${data?.name_en || ''}" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Harga</label>
+          <input type="text" class="svc-price w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-lagoon outline-none" placeholder="Rp 1.500.000" value="${data?.price || ''}" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Deskripsi (ID)</label>
+          <input type="text" class="svc-desc-id w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-lagoon outline-none" placeholder="Gabung grup, lebih hemat" value="${data?.desc_id || ''}" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Description (EN)</label>
+          <input type="text" class="svc-desc-en w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-lagoon outline-none" placeholder="Join a group, more affordable" value="${data?.desc_en || ''}" />
+        </div>
+      </div>
+    `;
+
+    // Removing a service card counts as modifying the services collection
+    card.querySelector(".remove-service")?.addEventListener("click", () => {
+      card.remove();
+      markServicesTouched();
+    });
+
+    // Any input change within a service card marks services as touched
+    card.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", markServicesTouched);
+    });
+
+    servicesContainer?.appendChild(card);
+
+    // Adding a new card (not pre-population) marks services as touched
+    if (!isPrePopulated) {
+      markServicesTouched();
+    }
+  }
+
+  addServiceBtn?.addEventListener("click", () => createServiceCard(undefined, false));
+
+  // Pre-populate existing services without marking as touched —
+  // pre-population is not a user modification, so it must not dirty the collection.
+  const existingServices = form?.dataset.isEdit === "true" ? (window as any).__DEST_SERVICES__ : [];
+  if (existingServices && existingServices.length > 0) {
+    existingServices.forEach((svc: any) => {
+      createServiceCard({
+        name_id: svc.name?.id || "",
+        name_en: svc.name?.en || "",
+        price: svc.price || "",
+        desc_id: svc.description?.id || "",
+        desc_en: svc.description?.en || "",
+      }, true /* isPrePopulated */);
+    });
+  }
+
+  // Form submission
+  const submitBtn = document.getElementById("submit-btn");
+  const messageEl = document.getElementById("form-message");
+
+  function showMessage(text: string, isError = false) {
+    if (!messageEl) return;
+    messageEl.textContent = text;
+    messageEl.classList.remove("hidden", "bg-lagoon/10", "text-ocean-deep", "bg-coral/10", "text-coral");
+    if (isError) {
+      messageEl.classList.add("bg-coral/10", "text-coral");
+    } else {
+      messageEl.classList.add("bg-lagoon/10", "text-ocean-deep");
+    }
+    messageEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (submitBtn) {
+      (submitBtn as HTMLButtonElement).disabled = true;
+      submitBtn.textContent = "Menyimpan...";
+    }
+
+    const titleId = (document.getElementById("title_id") as HTMLInputElement)?.value?.trim();
+    const titleEn = (document.getElementById("title_en") as HTMLInputElement)?.value?.trim();
+    const taglineId = (document.getElementById("tagline_id") as HTMLInputElement)?.value?.trim();
+    const taglineEn = (document.getElementById("tagline_en") as HTMLInputElement)?.value?.trim();
+    const aboutTextId = (document.getElementById("about_text_id") as HTMLTextAreaElement)?.value?.trim();
+    const aboutTextEn = (document.getElementById("about_text_en") as HTMLTextAreaElement)?.value?.trim();
+    const heroImage = (document.getElementById("hero_image") as HTMLInputElement)?.value?.trim();
+    const whatsappNumber = (document.getElementById("whatsapp_number") as HTMLInputElement)?.value?.trim();
+    const status = (document.getElementById("status") as HTMLSelectElement)?.value;
+
+    // Validation
+    if (!titleId || !titleEn) {
+      showMessage("Nama destinasi wajib diisi dalam kedua bahasa. Cek tab English juga.", true);
+      if (submitBtn) { (submitBtn as HTMLButtonElement).disabled = false; submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi"); }
+      return;
+    }
+    if (!taglineId || !taglineEn) {
+      showMessage("Tagline wajib diisi dalam kedua bahasa.", true);
+      if (submitBtn) { (submitBtn as HTMLButtonElement).disabled = false; submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi"); }
+      return;
+    }
+    if (!aboutTextId || !aboutTextEn) {
+      showMessage("Deskripsi destinasi wajib diisi dalam kedua bahasa.", true);
+      if (submitBtn) { (submitBtn as HTMLButtonElement).disabled = false; submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi"); }
+      return;
+    }
+    if (!heroImage) {
+      showMessage("URL gambar utama wajib diisi.", true);
+      if (submitBtn) { (submitBtn as HTMLButtonElement).disabled = false; submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi"); }
+      return;
+    }
+    if (!whatsappNumber) {
+      showMessage("Nomor WhatsApp wajib diisi.", true);
+      if (submitBtn) { (submitBtn as HTMLButtonElement).disabled = false; submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi"); }
+      return;
+    }
+
+    // Build the PUT body with only the collections that were touched in this session.
+    // Omitting a key entirely tells the repository to preserve existing children.
+    // Sending an explicit empty array tells the repository to delete all children.
+    // This prevents data loss when the admin saves without visiting a collection tab.
+    const body: Record<string, unknown> = {
+      title: { id: titleId, en: titleEn },
+      tagline: { id: taglineId, en: taglineEn },
+      heroImage,
+      aboutText: { id: aboutTextId, en: aboutTextEn },
+      whatsappNumber,
+      status,
+    };
+
+    // Only include services if the admin modified the services section this session
+    if (touchedTabs.has("services")) {
+      const serviceCards = servicesContainer?.querySelectorAll(":scope > div") || [];
+      const services: any[] = [];
+      serviceCards.forEach((card) => {
+        const nameId = (card.querySelector(".svc-name-id") as HTMLInputElement)?.value?.trim();
+        const nameEn = (card.querySelector(".svc-name-en") as HTMLInputElement)?.value?.trim();
+        const price = (card.querySelector(".svc-price") as HTMLInputElement)?.value?.trim();
+        const descId = (card.querySelector(".svc-desc-id") as HTMLInputElement)?.value?.trim();
+        const descEn = (card.querySelector(".svc-desc-en") as HTMLInputElement)?.value?.trim();
+        if (nameId || nameEn) {
+          services.push({
+            name: { id: nameId || nameEn, en: nameEn || nameId },
+            description: { id: descId || "", en: descEn || "" },
+            price: price || "Hubungi kami",
+            features: [],
+          });
+        }
+      });
+      body.services = services;
+    }
+
+    // galleryImages, testimonials, and faqEntries have no UI in this form yet.
+    // They are intentionally omitted so the repository preserves existing data.
+
+    try {
+      const response = await fetch(action, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showMessage(isEdit ? "✅ Destinasi berhasil diperbarui!" : "✅ Destinasi berhasil dibuat!", false);
+        if (!isEdit) {
+          setTimeout(() => {
+            window.location.href = `/admin/destinations/${result.data.id}/edit`;
+          }, 1000);
+        }
+      } else {
+        const errorMsg = result.error?.message || "Terjadi kesalahan.";
+        showMessage(errorMsg, true);
+      }
+    } catch {
+      showMessage("Gagal menghubungi server. Silakan coba lagi.", true);
+    } finally {
+      if (submitBtn) {
+        (submitBtn as HTMLButtonElement).disabled = false;
+        submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + (isEdit ? " Simpan Perubahan" : " Buat Destinasi");
+      }
+    }
+  });
+</script>

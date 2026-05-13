@@ -1,0 +1,41 @@
+---
+/**
+ * LanguageSwitcher Component
+ * Renders a link to switch between Bahasa Indonesia and English.
+ * Shows "English" when current locale is ID, "Bahasa Indonesia" when EN.
+ * Validates: Requirements 11.3, 11.4
+ */
+import { getLocaleFromUrl, getAlternateUrl, getTranslations } from "@/lib/i18n/utils";
+import type { Locale } from "@/lib/i18n/config";
+
+const currentUrl = Astro.url;
+const locale: Locale = getLocaleFromUrl(currentUrl);
+const targetLocale: Locale = locale === "id" ? "en" : "id";
+const alternateUrl = getAlternateUrl(currentUrl, targetLocale);
+const translations = getTranslations(locale);
+const switchLabel = translations.common.switchLang;
+---
+
+<a
+  href={alternateUrl}
+  class="inline-flex items-center justify-center min-h-touch min-w-touch rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  aria-label={`Switch language to ${switchLabel}`}
+  hreflang={targetLocale}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-4 w-4 mr-1.5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M2 12h20"></path>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+  </svg>
+  <span>{switchLabel}</span>
+</a>

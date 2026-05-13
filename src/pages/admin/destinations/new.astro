@@ -1,0 +1,37 @@
+---
+/**
+ * Admin Create New Destination Page (SSR)
+ * Bilingual destination creation form.
+ * Validates: Requirements 5.1, 5.2, 11.8
+ */
+export const prerender = false;
+
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import DestinationForm from "@/components/admin/DestinationForm.astro";
+---
+
+<AdminLayout title="Tambah Destinasi Baru">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center text-sm text-gray-500" aria-label="Breadcrumb">
+      <a href="/admin/destinations" class="hover:text-gray-700">Destinasi</a>
+      <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-gray-900 font-medium">Tambah Baru</span>
+    </nav>
+
+    <!-- Page header -->
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900">Tambah Destinasi Baru</h2>
+      <p class="mt-1 text-sm text-gray-600">
+        Isi konten dalam Bahasa Indonesia dan English menggunakan tab bahasa.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+      <DestinationForm action="/api/destinations" method="POST" />
+    </div>
+  </div>
+</AdminLayout>

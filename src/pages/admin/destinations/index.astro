@@ -1,0 +1,57 @@
+---
+/**
+ * Admin Destinations Listing Page — Tropical Ocean Design
+ * Lists all destinations with edit/publish/unpublish/delete actions.
+ * Delete uses the typed-slug DeleteConfirmDialog via the DestinationsAdminList React island.
+ * Validates: Requirements 5.3, 5.5, 7.1, 7.3, 7.6, 7.7, 7.8
+ */
+export const prerender = false;
+
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { DestinationsAdminList } from "@/components/admin/DestinationsAdminList";
+import { listAllDestinations } from "@/lib/db/destinations";
+import { getDB } from "@/lib/db/connection";
+
+const db = getDB();
+const destinations = await listAllDestinations(db);
+
+// Serialize only the fields the React island needs
+const destinationItems = destinations.map((dest) => ({
+  id: dest.id,
+  title: dest.title,
+  tagline: dest.tagline,
+  slug: dest.slug,
+  heroImage: dest.heroImage,
+  status: dest.status,
+  updatedAt: dest.updatedAt,
+}));
+---
+
+<AdminLayout title="Kelola Destinasi">
+  <div class="space-y-6">
+    <!-- Header with action -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-ocean-deep">Destinasi</h2>
+        <p class="mt-1 text-sm text-muted-foreground">
+          {destinations.length} destinasi terdaftar
+        </p>
+      </div>
+      <a
+        href="/admin/destinations/new"
+        class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-ocean hover:bg-ocean-deep rounded-xl transition-colors min-h-[44px]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>
+        </svg>
+        Tambah Destinasi
+      </a>
+    </div>
+
+    <!-- Destinations list (React island handles delete dialog + status toggle) -->
+    <DestinationsAdminList
+      initialDestinations={destinationItems}
+      client:load
+    />
+  </div>
+</AdminLayout>

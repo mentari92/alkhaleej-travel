@@ -1,0 +1,257 @@
+---
+export const prerender = false;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Admin infotour.id</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f4f6;
+      padding: 1rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      padding: 2rem;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.375rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+    }
+
+    .form-group input.input-error {
+      border-color: #dc2626;
+    }
+
+    .error-message {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 0.5rem;
+      color: #dc2626;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      background-color: #2563eb;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    .submit-btn:focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }
+
+    .submit-btn:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Admin Login</h1>
+      <p>Masuk ke dashboard infotour.id</p>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        Masuk
+      </button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form') as HTMLFormElement;
+    const usernameInput = document.getElementById('username') as HTMLInputElement;
+    const passwordInput = document.getElementById('password') as HTMLInputElement;
+    const errorMessage = document.getElementById('error-message') as HTMLDivElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+    function showError(message: string) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('visible');
+    }
+
+    function hideError() {
+      errorMessage.textContent = '';
+      errorMessage.classList.remove('visible');
+    }
+
+    function clearInputErrors() {
+      usernameInput.classList.remove('input-error');
+      passwordInput.classList.remove('input-error');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+      clearInputErrors();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      // Client-side validation
+      if (!username) {
+        usernameInput.classList.add('input-error');
+        showError('Username harus diisi');
+        usernameInput.focus();
+        return;
+      }
+
+      if (!password) {
+        passwordInput.classList.add('input-error');
+        showError('Password harus diisi');
+        passwordInput.focus();
+        return;
+      }
+
+      // Disable button during request
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Memproses...';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          window.location.href = '/admin';
+          return;
+        }
+
+        // Handle error response
+        if (data.error) {
+          if (data.error.code === 'INVALID_CREDENTIALS') {
+            showError('Username atau password salah');
+            usernameInput.classList.add('input-error');
+            passwordInput.classList.add('input-error');
+          } else if (data.error.code === 'MISSING_FIELDS') {
+            showError(data.error.message || 'Username dan password harus diisi');
+          } else {
+            showError(data.error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+          }
+        } else {
+          showError('Terjadi kesalahan. Silakan coba lagi.');
+        }
+      } catch {
+        showError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Masuk';
+      }
+    });
+  </script>
+</body>
+</html>

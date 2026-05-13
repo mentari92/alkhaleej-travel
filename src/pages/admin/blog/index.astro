@@ -1,0 +1,57 @@
+---
+/**
+ * Blog Management Listing Page — Tropical Ocean Design
+ * Lists all blog articles with language badge, status badge, and action buttons.
+ * Uses BlogListIsland (React) for interactive delete and publish actions.
+ * Validates: Requirements 6.1, 6.3, 6.4, 7.2, 7.4, 7.5, 7.6, 7.7, 7.8, 11.8
+ */
+export const prerender = false;
+
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { listAllArticles } from "@/lib/db/blog";
+import { getDB } from "@/lib/db/connection";
+import { BlogListIsland } from "@/components/admin/BlogListIsland";
+
+const db = getDB();
+const articles = await listAllArticles(db);
+
+// Serialize only the fields the island needs to avoid passing non-serialisable objects.
+const articleSummaries = articles.map((a) => ({
+  id: a.id,
+  slug: a.slug,
+  title: a.title,
+  excerpt: a.excerpt,
+  language: a.language,
+  status: a.status,
+  thumbnailUrl: a.thumbnailUrl || null,
+  publishedAt: a.publishedAt || null,
+  createdAt: a.createdAt,
+}));
+---
+
+<AdminLayout title="Kelola Blog">
+  <div class="space-y-6">
+    <!-- Header with actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-ocean-deep">Artikel Blog</h2>
+        <p class="mt-1 text-sm text-muted-foreground">
+          Kelola semua artikel blog dalam Bahasa Indonesia dan English.
+        </p>
+      </div>
+      <a
+        href="/admin/blog/generate"
+        class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-ocean hover:bg-ocean-deep rounded-xl transition-colors min-h-[44px]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+          <path d="M20 3v4"/><path d="M22 5h-4"/>
+        </svg>
+        Generate Artikel AI
+      </a>
+    </div>
+
+    <!-- Articles list (React island handles interactivity) -->
+    <BlogListIsland client:load initialArticles={articleSummaries} />
+  </div>
+</AdminLayout>

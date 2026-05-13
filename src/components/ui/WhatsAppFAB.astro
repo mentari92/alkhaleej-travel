@@ -1,0 +1,34 @@
+---
+/**
+ * WhatsApp Floating Action Button
+ * Fixed bottom-right button for quick WhatsApp contact.
+ */
+import type { SiteSettings } from "@/lib/db/site-settings";
+import { SiteSettingsDefaults } from "@/lib/site-settings/defaults";
+
+interface Props {
+  message?: string;
+  settings?: SiteSettings;
+}
+
+const {
+  message = "Halo, saya tertarik dengan paket wisata di infotour.id",
+  settings = SiteSettingsDefaults,
+} = Astro.props;
+
+const phone = settings.primaryWhatsappNumber;
+const href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noreferrer"
+  class="fixed bottom-6 right-6 z-50 flex items-center gap-2 pl-4 pr-5 py-3 rounded-full bg-whatsapp text-white shadow-glow hover:scale-105 transition-transform"
+  aria-label="Chat WhatsApp"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+  </svg>
+  <span class="font-medium text-sm">Chat WhatsApp</span>
+</a>

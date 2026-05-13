@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Integrate Design Canvas UI",
+  "description": "Fetches the design-canvas repository from https://github.com/ahmadasrizalmi/design-canvas.git and integrates its UI components and mock seed data into the current Infotour-id project so the web can be previewed with sample data.",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Clone or fetch the repository at https://github.com/ahmadasrizalmi/design-canvas.git into a temporary folder, then integrate its UI design (components, layouts, styles, pages) into this Astro project at d:\\kanda-project\\Infotour-id. Also integrate any mock/seed data so the website can be previewed with sample content. Preserve existing project structure where possible, replacing or updating UI components as needed. After integration, ensure the project builds successfully."
+  }
+}

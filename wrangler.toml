@@ -1,0 +1,31 @@
+name = "alkhaleej-travel"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "alkhaleej-db"
+# TODO: Replace with the actual database_id from `wrangler d1 create alkhaleej-db`
+database_id = "00000000-0000-0000-0000-000000000000"
+
+# Environment variables (set via Cloudflare dashboard or wrangler secret)
+[vars]
+SITE_URL = "https://alkhaleejtravel.co.id"
+DEFAULT_LOCALE = "id"
+
+# Production environment
+[env.production]
+name = "alkhaleej-travel"
+
+[env.production.vars]
+SITE_URL = "https://alkhaleejtravel.co.id"
+DEFAULT_LOCALE = "id"
+
+# Preview/staging environment
+[env.preview]
+name = "alkhaleej-travel-preview"
+
+[env.preview.vars]
+SITE_URL = "https://preview.alkhaleejtravel.co.id"
+DEFAULT_LOCALE = "id"

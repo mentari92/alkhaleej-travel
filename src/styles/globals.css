@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --radius: 1rem;
+
+    /* Alkhaleej Travel — Gold & Emerald palette */
+    --gold-dark: 37 62% 36%;      /* #B47E2A — dari logo */
+    --gold: 38 55% 47%;           /* #C6A554 */
+    --gold-light: 39 52% 63%;     /* #D3B96B */
+    --emerald-deep: 155 75% 18%;  /* Hijau Islam gelap */
+    --emerald: 155 65% 32%;       /* Hijau Islam */
+    --navy: 220 45% 12%;          /* Navy gelap */
+    --cream: 40 50% 95%;          /* Krem */
+    --whatsapp: 142 70% 35%;
+
+    --background: 40 40% 98%;
+    --foreground: 220 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 45% 12%;
+    --primary: 37 62% 36%;
+    --primary-foreground: 40 40% 98%;
+    --secondary: 40 30% 93%;
+    --secondary-foreground: 220 45% 12%;
+    --muted: 40 20% 95%;
+    --muted-foreground: 220 15% 45%;
+    --accent: 155 65% 32%;
+    --accent-foreground: 40 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 20% 88%;
+    --input: 40 15% 90%;
+    --ring: 37 62% 36%;
+
+    --gradient-gold: linear-gradient(135deg, hsl(37 62% 36%) 0%, hsl(38 55% 47%) 50%, hsl(39 52% 63%) 100%);
+    --gradient-hero: linear-gradient(180deg, transparent 0%, hsl(220 45% 12% / 0.3) 50%, hsl(220 45% 12% / 0.95) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(155 75% 18%) 0%, hsl(155 65% 32%) 100%);
+    --gradient-header: linear-gradient(180deg, hsl(220 45% 12% / 0.6) 0%, transparent 100%);
+  }
+
+  .dark {
+    --background: 220 45% 8%;
+    --foreground: 40 30% 95%;
+    --card: 220 45% 12%;
+    --card-foreground: 40 30% 95%;
+    --popover: 220 45% 12%;
+    --popover-foreground: 40 30% 95%;
+    --primary: 39 52% 63%;
+    --primary-foreground: 220 45% 12%;
+    --secondary: 220 45% 12%;
+    --secondary-foreground: 40 30% 95%;
+    --muted: 220 45% 12%;
+    --muted-foreground: 40 15% 65%;
+    --accent: 155 65% 32%;
+    --accent-foreground: 40 30% 95%;
+    --border: 0 0% 100% / 10%;
+    --input: 0 0% 100% / 12%;
+    --ring: 39 52% 63%;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto px-5 max-w-[80rem];
+  }
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .surface-glass {
+    background: hsl(var(--background) / 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .shadow-soft {
+    box-shadow: 0 8px 30px -12px hsl(220 45% 12% / 0.18);
+  }
+  .shadow-card {
+    box-shadow: 0 14px 40px -16px hsl(220 45% 12% / 0.25);
+  }
+  .shadow-glow {
+    box-shadow: 0 20px 60px -20px hsl(37 62% 36% / 0.4);
+  }
+  /* Islamic geometric pattern background */
+  .bg-pattern-islamic {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B47E2A' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}

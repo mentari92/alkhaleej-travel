@@ -1,0 +1,53 @@
+---
+/**
+ * Blog Listing Page — Bahasa Indonesia
+ * Displays all published blog articles in Bahasa Indonesia.
+ * Server-rendered (SSR).
+ * Validates: Requirements 7.1, 7.2, 11.2, 11.5, 11.10
+ */
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleCard from "@/components/blog/ArticleCard.astro";
+import { listPublishedArticles } from "@/lib/db/blog";
+import { getDB } from "@/lib/db/connection";
+import type { HreflangEntry } from "@/layouts/BaseLayout.astro";
+import type { Locale } from "@/lib/i18n/config";
+
+const locale: Locale = "id";
+const db = getDB();
+const articles = await listPublishedArticles(db, locale);
+
+const hreflang: HreflangEntry[] = [
+  { locale: "id", url: "https://infotour.id/blog/" },
+  { locale: "en", url: "https://infotour.id/en/blog/" },
+];
+---
+
+<BaseLayout
+  title="Blog - infotour.id"
+  description="Baca artikel terbaru tentang wisata Indonesia. Tips perjalanan, panduan destinasi, dan informasi berguna untuk liburan Anda."
+  canonicalUrl="https://infotour.id/blog/"
+  hreflang={hreflang}
+>
+  <section class="container mx-auto px-4 py-8 md:py-12">
+    <h1 class="text-3xl font-bold md:text-4xl lg:text-5xl">
+      Blog Wisata
+    </h1>
+    <p class="mt-4 max-w-2xl text-muted-foreground">
+      Temukan artikel menarik tentang destinasi wisata Indonesia, tips perjalanan, dan panduan liburan.
+    </p>
+
+    <div class="mt-8 md:mt-12">
+      {articles.length > 0 ? (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {articles.map((article) => (
+            <ArticleCard article={article} locale={locale} />
+          ))}
+        </div>
+      ) : (
+        <p class="text-muted-foreground">Belum ada artikel yang tersedia.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

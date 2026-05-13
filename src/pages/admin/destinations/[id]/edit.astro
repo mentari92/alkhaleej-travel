@@ -1,0 +1,73 @@
+---
+/**
+ * Admin Edit Destination Page (SSR)
+ * Bilingual destination edit form with pre-populated data.
+ * Validates: Requirements 5.3, 5.4, 11.8
+ */
+export const prerender = false;
+
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import DestinationForm from "@/components/admin/DestinationForm.astro";
+import { getDestinationById } from "@/lib/db/destinations";
+import { getDB } from "@/lib/db/connection";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/admin/destinations");
+}
+
+const db = getDB(Astro.locals);
+const destination = await getDestinationById(db, id);
+
+if (!destination) {
+  return Astro.redirect("/admin/destinations");
+}
+---
+
+<AdminLayout title={`Edit: ${destination.title.id}`}>
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center text-sm text-gray-500" aria-label="Breadcrumb">
+      <a href="/admin/destinations" class="hover:text-gray-700">Destinasi</a>
+      <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-gray-900 font-medium">Edit</span>
+    </nav>
+
+    <!-- Page header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Edit Destinasi</h2>
+        <p class="mt-1 text-sm text-gray-600">
+          {destination.title.id} / {destination.title.en}
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span
+          class:list={[
+            "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+            destination.status === "published"
+              ? "bg-green-100 text-green-800"
+              : "bg-yellow-100 text-yellow-800",
+          ]}
+        >
+          {destination.status === "published" ? "Dipublikasi" : "Draf"}
+        </span>
+        <span class="text-xs text-gray-500">
+          Slug: <code class="bg-gray-100 px-1 rounded">{destination.slug}</code>
+        </span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+      <DestinationForm
+        destination={destination}
+        action={`/api/destinations/${id}`}
+        method="PUT"
+      />
+    </div>
+  </div>
+</AdminLayout>

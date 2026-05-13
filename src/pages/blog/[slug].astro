@@ -1,0 +1,134 @@
+---
+/**
+ * Blog Article Page — Bahasa Indonesia
+ * Server-rendered for each request. Fetches article by slug from D1.
+ * Includes SEO metadata, OG tags, hreflang to paired article, and JSON-LD.
+ * Validates: Requirements 7.1, 7.2, 7.3, 7.4, 11.2, 11.5, 11.6, 11.10
+ */
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArticleContent from "@/components/blog/ArticleContent.astro";
+import RelatedDestinations from "@/components/blog/RelatedDestinations.astro";
+import { getArticleBySlug, getArticleById } from "@/lib/db/blog";
+import { getDestinationById } from "@/lib/db/destinations";
+import { getDB } from "@/lib/db/connection";
+import { generateMetaTags } from "@/lib/seo/meta";
+import type { Locale } from "@/lib/i18n/config";
+import type { Destination } from "@/lib/types";
+
+const locale: Locale = "id";
+
+const { slug } = Astro.params;
+if (!slug) {
+  return Astro.redirect("/blog/");
+}
+
+let article;
+try {
+  const db = getDB();
+  article = await getArticleBySlug(db, slug);
+} catch {
+  // DB error — return 404 (Requirements 6.1, 6.3)
+  return new Response(null, { status: 404 });
+}
+
+if (!article || article.status !== "published" || article.language !== locale) {
+  return new Response(null, { status: 404 });
+}
+
+const db = getDB();
+const meta = generateMetaTags(article, locale);
+
+// If there's a paired article, get its slug for hreflang
+let pairedArticleSlug: string | null = null;
+if (article.pairedArticleId) {
+  try {
+    const pairedArticle = await getArticleById(db, article.pairedArticleId);
+    if (pairedArticle) {
+      pairedArticleSlug = pairedArticle.slug;
+      // Update hreflang to use the paired article's actual slug
+      const pairedEntry = meta.hreflang.find((h) => h.locale === "en");
+      if (pairedEntry) {
+        pairedEntry.url = `https://infotour.id/en/blog/${pairedArticleSlug}`;
+      }
+    }
+  } catch {
+    // Non-critical: skip paired article hreflang on error
+  }
+}
+
+// Load related destinations
+const relatedDestinations: Destination[] = [];
+for (const destId of article.relatedDestinationIds) {
+  try {
+    const dest = await getDestinationById(db, destId);
+    if (dest && dest.status === "published") {
+      relatedDestinations.push(dest);
+    }
+  } catch {
+    // Non-critical: skip this related destination on error
+  }
+}
+
+// Format publication date
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+const formattedDate = formatDate(article.publishedAt);
+
+// JSON-LD structured data
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: article.title,
+  description: article.metaDescription,
+  image: article.ogImage || article.thumbnailUrl || undefined,
+  datePublished: article.publishedAt || undefined,
+  dateModified: article.updatedAt,
+  url: meta.canonicalUrl,
+  inLanguage: "id",
+  publisher: {
+    "@type": "Organization",
+    name: "infotour.id",
+    url: "https://infotour.id",
+  },
+};
+---
+
+<BaseLayout
+  title={meta.title}
+  description={meta.description}
+  canonicalUrl={meta.canonicalUrl}
+  ogImage={meta.ogImage}
+  ogType={meta.ogType}
+  hreflang={meta.hreflang}
+>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <div class="max-w-3xl mx-auto">
+      {formattedDate && (
+        <time
+          datetime={article.publishedAt ?? undefined}
+          class="text-sm text-muted-foreground"
+        >
+          {formattedDate}
+        </time>
+      )}
+
+      <ArticleContent article={article} />
+
+      <RelatedDestinations destinations={relatedDestinations} locale={locale} />
+    </div>
+  </div>
+</BaseLayout>

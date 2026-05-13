@@ -1,0 +1,119 @@
+---
+/**
+ * MobileNav Component
+ * Hamburger menu for viewports < 768px (md breakpoint).
+ * All interactive elements have 44x44px minimum tap targets.
+ * Validates: Requirements 9.1, 9.2
+ */
+import { getLocaleFromUrl, getTranslations } from "@/lib/i18n/utils";
+import { i18nConfig } from "@/lib/i18n/config";
+import type { Locale } from "@/lib/i18n/config";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const translations = getTranslations(locale);
+const prefix = i18nConfig.urlPrefix[locale];
+
+const navItems = [
+  { label: translations.nav.home, href: `${prefix}/` },
+  { label: translations.nav.destinations, href: `${prefix}/destinations` },
+  { label: translations.nav.blog, href: `${prefix}/blog` },
+];
+---
+
+<div class="md:hidden" id="mobile-nav">
+  <!-- Hamburger button -->
+  <button
+    type="button"
+    id="mobile-nav-toggle"
+    class="inline-flex items-center justify-center min-h-touch min-w-touch rounded-md p-2 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    aria-expanded="false"
+    aria-controls="mobile-nav-menu"
+    aria-label="Open navigation menu"
+  >
+    <!-- Hamburger icon -->
+    <svg
+      id="mobile-nav-icon-open"
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    <!-- Close icon (hidden by default) -->
+    <svg
+      id="mobile-nav-icon-close"
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 hidden"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Mobile menu panel -->
+  <nav
+    id="mobile-nav-menu"
+    class="hidden absolute top-full left-0 right-0 bg-background border-b border-border shadow-lg z-50"
+    aria-label="Mobile navigation"
+  >
+    <ul class="flex flex-col px-4 py-2">
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="flex items-center min-h-touch px-3 py-2 text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li class="border-t border-border mt-2 pt-2">
+        <LanguageSwitcher />
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  const toggle = document.getElementById("mobile-nav-toggle");
+  const menu = document.getElementById("mobile-nav-menu");
+  const iconOpen = document.getElementById("mobile-nav-icon-open");
+  const iconClose = document.getElementById("mobile-nav-icon-close");
+
+  if (toggle && menu && iconOpen && iconClose) {
+    toggle.addEventListener("click", () => {
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isExpanded));
+      menu.classList.toggle("hidden");
+      iconOpen.classList.toggle("hidden");
+      iconClose.classList.toggle("hidden");
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      const nav = document.getElementById("mobile-nav");
+      if (nav && !nav.contains(e.target as Node)) {
+        toggle.setAttribute("aria-expanded", "false");
+        menu.classList.add("hidden");
+        iconOpen.classList.remove("hidden");
+        iconClose.classList.add("hidden");
+      }
+    });
+  }
+</script>

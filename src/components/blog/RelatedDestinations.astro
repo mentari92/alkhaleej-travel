@@ -1,0 +1,52 @@
+---
+/**
+ * RelatedDestinations Component
+ * Displays links to related destinations referenced by a blog article.
+ * Only renders if there are related destinations that exist and are published.
+ * Validates: Requirements 7.4
+ */
+import type { Destination } from "@/lib/types";
+import type { Locale } from "@/lib/i18n/config";
+import { i18nConfig } from "@/lib/i18n/config";
+import { t } from "@/lib/i18n/utils";
+
+export interface Props {
+  destinations: Destination[];
+  locale: Locale;
+}
+
+const { destinations, locale } = Astro.props;
+
+const prefix = i18nConfig.urlPrefix[locale];
+
+const sectionTitle = locale === "id" ? "Destinasi Terkait" : "Related Destinations";
+---
+
+{destinations.length > 0 && (
+  <aside class="mt-12 border-t border-border pt-8">
+    <h2 class="text-xl font-semibold mb-4">{sectionTitle}</h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {destinations.map((dest) => (
+        <a
+          href={`${prefix}/destinations/${dest.slug}`}
+          class="flex items-center gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <img
+            src={dest.heroImage}
+            alt={t(dest.title, locale)}
+            class="h-12 w-12 rounded-md object-cover"
+            loading="lazy"
+          />
+          <div>
+            <span class="text-sm font-medium text-card-foreground">
+              {t(dest.title, locale)}
+            </span>
+            <p class="text-xs text-muted-foreground line-clamp-1">
+              {t(dest.tagline, locale)}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </aside>
+)}
