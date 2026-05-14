@@ -1,13 +1,11 @@
 ---
 /**
  * Homepage — PT Alkhaleej Travelindo Utama
- * Hero section, featured packages, why-us, blog preview, and CTA.
- * Uses DB data with fallback to mock data for preview.
+ * Redesigned based on Google Stitch design.
  */
 export const prerender = false;
 
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import type { HreflangEntry } from "@/layouts/BaseLayout.astro";
 import type { TravelPackage, BlogArticle } from "@/lib/types";
 import { mockPackages, mockBlogArticles } from "@/lib/mock-data";
 import { getSiteSettings } from "@/lib/db/site-settings";
@@ -27,320 +25,203 @@ const settings = await (async () => {
 
 try {
   const db = getDB();
-  // TODO: Replace with actual package queries
-  // packages = await listPublishedPackages(db);
-  // blogArticles = await listPublishedArticles(db, "id");
-} catch {
-  // Fallback to empty arrays on DB error
-  packages = [];
-  blogArticles = [];
-}
+} catch {}
 
-// Use mock data if DB returned empty
-if (packages.length === 0) {
-  packages = mockPackages;
-}
-if (blogArticles.length === 0) {
-  blogArticles = mockBlogArticles;
-}
+if (packages.length === 0) packages = mockPackages;
+if (blogArticles.length === 0) blogArticles = mockBlogArticles;
 
-const featured = packages.slice(0, 4);
-
-function getPackageTypeIcon(type: string) {
-  if (type === "haji_mujamalah") return "🕋";
-  if (type === "umrah") return "🕌";
-  return "🌙";
-}
 const posts = blogArticles.slice(0, 3);
 
-const hreflang: HreflangEntry[] = [
-  { locale: "id", url: "/" },
-  { locale: "en", url: "/en/" },
-];
-
 function getPackageTypeLabel(type: string) {
-  const labels: Record<string, { id: string; en: string }> = {
-    haji_mujamalah: { id: "Haji Mujamalah", en: "Hajj Mujamalah" },
-    umrah: { id: "Umrah", en: "Umrah" },
-    umrah_plus: { id: "Umrah Plus", en: "Umrah Plus" },
-    tour_muslim: { id: "Tour Muslim", en: "Muslim Tour" },
+  const labels: Record<string, string> = {
+    haji_mujamalah: "HAJI MUJAMALAH",
+    umrah: "UMRAH",
   };
-  return labels[type] || { id: type, en: type };
+  return labels[type] || type.toUpperCase();
 }
 ---
 
 <BaseLayout
   title="Alkhaleej Travelindo Utama — Partner Haji & Umrah Terpercaya"
-  description="PT Alkhaleej Travelindo Utama — penyedia paket Haji Mujamalah, Umrah, dan wisata Muslim terpercaya. Pelayanan premium dengan pembimbing ibadah berpengalaman."
+  description="PT Alkhaleej Travelindo Utama — penyedia paket Haji Mujamalah dan Umrah terpercaya. Pelayanan premium dengan pembimbing ibadah berpengalaman."
   settings={settings}
 >
-  <!-- Hero Section -->
-  <section class="relative min-h-[92vh] flex items-end overflow-hidden bg-navy">
-    <img src="/assets/kaabah-night.jpg" alt="Ka'bah di malam hari" class="absolute inset-0 w-full h-full object-cover" loading="eager" />
-    <div class="absolute inset-0 bg-navy/60"></div>
-    <div class="absolute inset-0 bg-pattern-islamic opacity-20"></div>
-    <div class="absolute inset-0" style="background: var(--gradient-hero);"></div>
+  <!-- Hero Banner -->
+  <header class="relative h-[80vh] w-full flex items-center justify-center overflow-hidden mt-0">
+    <div class="absolute inset-0 z-0">
+      <img alt="Masjidil Haram Makkah" class="w-full h-full object-cover" src="/assets/kaabah-masjidil-haram.jpg" />
+      <div class="absolute inset-0 bg-navy-deep/60"></div>
+    </div>
+    <div class="relative z-10 text-center px-6">
+      <h1 class="text-4xl md:text-5xl lg:text-[48px] font-bold text-white mb-4 leading-tight">
+        Pilih Perjalanan Suci Anda
+      </h1>
+      <div class="w-24 h-1 bg-gold-mid mx-auto rounded-full"></div>
+      <p class="mt-6 text-white/90 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+        Melayani dengan hati, membimbing langkah Anda menuju Baitullah dengan kenyamanan dan kekhusyukan yang tak terlupakan.
+      </p>
+    </div>
+  </header>
 
-    <div class="container-page relative pb-20 pt-32 text-white z-10">
-      <div class="max-w-3xl">
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/20 backdrop-blur text-sm font-medium mb-8 border border-gold/30">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gold-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-            <path d="m9 12 2 2 4-4"/>
-          </svg>
-          <span class="text-gold-light">Resmi & Terpercaya</span>
+  <!-- Mengapa Kami -->
+  <section class="py-20 lg:py-28 px-6 lg:px-12 max-w-7xl mx-auto text-center">
+    <span class="text-gold-mid text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">Mengapa Kami</span>
+    <h2 class="text-3xl md:text-[48px] font-bold text-navy-deep mb-16">Alkhaleej Travelindo Utama</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-white p-10 rounded-2xl shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 bg-gold-mid/10 text-gold-mid rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
         </div>
+        <h3 class="text-xl font-semibold text-navy-deep mb-4">Resmi & Terlisensi</h3>
+        <p class="text-muted-foreground text-base">Terdaftar resmi di Kementerian Agama RI sebagai penyelenggara Umrah dan Haji Khusus.</p>
+      </div>
 
-        <h1 class="font-display font-bold text-4xl md:text-6xl lg:text-7xl leading-[1.05]">
-          {settings.heroTitleId}
-        </h1>
-        <p class="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
-          {settings.heroSubtitleId}
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="mt-10 flex flex-wrap gap-4">
-          <a href="/packages" class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gold text-navy font-bold text-lg hover:bg-gold-light transition shadow-glow">
-            {settings.heroCtaTextId}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-            </svg>
-          </a>
-          <a href={`https://wa.me/${settings.primaryWhatsappNumber}`} class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-whatsapp text-white font-semibold text-lg hover:bg-whatsapp/90 transition">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Konsultasi Gratis
-          </a>
+      <div class="bg-white p-10 rounded-2xl shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 bg-gold-mid/10 text-gold-mid rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
         </div>
+        <h3 class="text-xl font-semibold text-navy-deep mb-4">Pembimbing Berpengalaman</h3>
+        <p class="text-muted-foreground text-base">Setiap rombongan didampingi pembimbing ibadah bersertifikat dengan pengalaman bertahun-tahun.</p>
+      </div>
 
-        <!-- Stats -->
-        <div class="mt-12 flex flex-wrap gap-8 text-white/90">
-          {settings.yearsExperience > 0 && (
-            <div>
-              <p class="font-display font-bold text-3xl text-gold">{settings.yearsExperience}+</p>
-              <p class="text-xs uppercase tracking-wider text-white/60">Tahun Pengalaman</p>
-            </div>
-          )}
-          {settings.happyJamaahCount > 0 && (
-            <div>
-              <p class="font-display font-bold text-3xl text-gold">{settings.happyJamaahCount >= 1000 ? `${Math.floor(settings.happyJamaahCount / 1000)}K+` : `${settings.happyJamaahCount}+`}</p>
-              <p class="text-xs uppercase tracking-wider text-white/60">Jamaah Terlayani</p>
-            </div>
-          )}
-          <div>
-            <p class="font-display font-bold text-3xl text-gold">{packages.length}+</p>
-            <p class="text-xs uppercase tracking-wider text-white/60">Paket Tersedia</p>
-          </div>
-          <div>
-            <p class="font-display font-bold text-3xl text-gold">{settings.averageRating > 0 ? settings.averageRating.toFixed(1) : "5.0"}</p>
-            <p class="text-xs uppercase tracking-wider text-white/60">Rating</p>
-          </div>
+      <div class="bg-white p-10 rounded-2xl shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+        <div class="w-16 h-16 bg-gold-mid/10 text-gold-mid rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </div>
+        <h3 class="text-xl font-semibold text-navy-deep mb-4">Pelayanan 24 Jam</h3>
+        <p class="text-muted-foreground text-base">Tim kami siap melayani Anda selama 24 jam di Tanah Suci. Konsultasi dan booking mudah via WhatsApp.</p>
       </div>
     </div>
   </section>
 
-  <!-- Featured Packages -->
-  <section class="container-page py-20">
-    <div class="text-center mb-12">
-      <p class="text-sm font-semibold text-gold uppercase tracking-wider mb-3">Paket Kami</p>
-      <h2 class="font-display font-bold text-4xl md:text-5xl text-navy">
-        Pilih <span class="text-gradient-gold">Perjalanan Suci</span> Anda
-      </h2>
-      <p class="mt-4 text-muted-foreground max-w-2xl mx-auto">
-        Paket Haji Mujamalah dan Umrah yang dirancang untuk kenyamanan, kekhusyukan, dan kelancaran ibadah Anda.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-8">
-      {featured.map((pkg) => (
-        <a
-          href={`/packages/${pkg.slug}`}
-          class="group relative flex flex-col rounded-3xl overflow-hidden bg-card border border-border shadow-soft hover:shadow-card transition-all hover:-translate-y-1"
-        >
-          <div class="relative aspect-[16/9] overflow-hidden">
-            <img src={pkg.heroImage} alt={pkg.title.id} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/90 z-10"></div>
-            <!-- Package type badge -->
-            <div class="absolute top-4 left-4 z-20">
-              <span class="px-4 py-1.5 rounded-full bg-gold/90 text-navy text-xs font-bold uppercase tracking-wider">
-                {getPackageTypeLabel(pkg.packageType).id}
-              </span>
-            </div>
-            <!-- Content overlay -->
-            <div class="absolute bottom-0 left-0 right-0 p-6 text-white z-20">
-              <h3 class="font-display font-bold text-3xl">{pkg.title.id}</h3>
-              <p class="text-white/80 mt-1">{pkg.tagline.id}</p>
+  <!-- Packages Section -->
+  <section class="py-16 lg:py-20 px-6 lg:px-12 max-w-[1100px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+      {packages.map((pkg) => (
+        <a href={`/packages/${pkg.slug}`} class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500">
+          <div class="relative h-64 overflow-hidden">
+            <img alt={pkg.title.id} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src={pkg.heroImage} loading="lazy" />
+            <div class="absolute top-4 left-4 bg-gold-mid text-navy-deep px-4 py-1 rounded-full text-xs font-semibold uppercase tracking-widest shadow-lg">
+              {getPackageTypeLabel(pkg.packageType)}
             </div>
           </div>
-          <div class="p-6">
-            <p class="text-sm text-muted-foreground line-clamp-2 mb-4">{pkg.aboutText.id.slice(0, 120)}...</p>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-[11px] uppercase tracking-wider text-muted-foreground">Mulai dari</p>
-                <p class="font-display font-bold text-xl text-gold">
-                  {pkg.tiers[0]?.price || "Hubungi kami"}
-                </p>
-              </div>
-              <span class="inline-flex items-center gap-1 text-sm font-medium text-gold group-hover:underline">
-                Lihat Detail
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                </svg>
-              </span>
+          <div class="p-8">
+            <h3 class="text-2xl lg:text-[32px] font-bold text-navy-deep mb-2">{pkg.title.id}</h3>
+            <p class="text-gold-mid text-sm font-semibold uppercase tracking-tight mb-4">{pkg.tagline.id}</p>
+            <p class="text-muted-foreground text-base mb-6 line-clamp-2">{pkg.aboutText.id.slice(0, 130)}...</p>
+            <div class="flex flex-wrap gap-2 mb-8">
+              {pkg.tiers.map((tier, i) => (
+                <span class:list={[
+                  "px-3 py-1 rounded-full text-xs font-semibold",
+                  i === 0 ? "bg-surface-container-high text-navy-deep" : i === 1 ? "bg-primary text-white" : "bg-navy-deep text-gold-warm",
+                ]}>
+                  {tier.name.id}
+                </span>
+              ))}
             </div>
+            <span class="flex items-center text-gold-mid font-bold hover:gap-4 transition-all duration-300">
+              Lihat Detail
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </span>
           </div>
         </a>
       ))}
     </div>
-
-    <div class="mt-10 text-center">
-      <a
-        href="/packages"
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-navy text-white font-medium hover:bg-emerald transition"
-      >
-        Lihat Semua Paket
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-        </svg>
-      </a>
-    </div>
   </section>
 
-  <!-- Why Choose Us -->
-  <section class="bg-cream py-20">
-    <div class="container-page">
-      <div class="text-center mb-12">
-        <p class="text-sm font-semibold text-gold uppercase tracking-wider mb-3">Mengapa Kami</p>
-        <h2 class="font-display font-bold text-4xl md:text-5xl text-navy">
-          Alkhaleej Travelindo Utama
+  <!-- Jadwal Keberangkatan -->
+  <section id="jadwal" class="bg-cream-bg py-16 lg:py-20 islamic-pattern">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      <div class="mb-16 text-center">
+        <span class="text-gold-mid text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">JADWAL</span>
+        <h2 class="text-3xl md:text-[48px] font-bold text-navy-deep">
+          Jadwal <span class="text-gold-accent">Keberangkatan</span>
         </h2>
+        <p class="mt-4 text-muted-foreground max-w-xl mx-auto">Pilih jadwal keberangkatan yang sesuai dengan rencana perjalanan ibadah Anda.</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-card rounded-3xl p-8 shadow-soft text-center">
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-gold-light text-navy grid place-items-center mx-auto mb-5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-              <path d="m9 12 2 2 4-4"/>
-            </svg>
-          </div>
-          <h3 class="font-display font-bold text-xl mb-2">Resmi & Terlisensi</h3>
-          <p class="text-muted-foreground">Terdaftar resmi di Kementerian Agama RI sebagai penyelenggara perjalanan ibadah haji dan umrah.</p>
-        </div>
-        <div class="bg-card rounded-3xl p-8 shadow-soft text-center">
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-gold-light text-navy grid place-items-center mx-auto mb-5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
-          <h3 class="font-display font-bold text-xl mb-2">Pembimbing Berpengalaman</h3>
-          <p class="text-muted-foreground">Setiap rombongan didampingi pembimbing ibadah bersertifikat dengan pengalaman bertahun-tahun.</p>
-        </div>
-        <div class="bg-card rounded-3xl p-8 shadow-soft text-center">
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-gold-light text-navy grid place-items-center mx-auto mb-5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/>
-            </svg>
-          </div>
-          <h3 class="font-display font-bold text-xl mb-2">Pelayanan 24 Jam</h3>
-          <p class="text-muted-foreground">Tim kami siap melayani Anda selama 24 jam di Tanah Suci. Konsultasi dan booking mudah via WhatsApp.</p>
-        </div>
+      <div class="max-w-4xl mx-auto space-y-4">
+        {packages.flatMap(pkg => pkg.departureSchedules.map(sched => ({ ...sched, pkgTitle: pkg.title, pkgSlug: pkg.slug }))).map((sched) => {
+          const d = new Date(sched.departureDate);
+          const day = d.getDate().toString().padStart(2, '0');
+          const months = ['JAN','FEB','MAR','APR','MEI','JUN','JUL','AGT','SEP','OKT','NOV','DES'];
+          const month = months[d.getMonth()];
+          return (
+            <div class="bg-white p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 shadow-sm border border-surface-container hover:shadow-md transition-all">
+              <div class="flex-shrink-0 w-20 h-20 bg-gold-mid text-white rounded-xl flex flex-col items-center justify-center">
+                <span class="text-2xl font-bold">{day}</span>
+                <span class="text-xs uppercase tracking-widest">{month}</span>
+              </div>
+              <div class="flex-grow text-center md:text-left">
+                <h4 class="text-xl font-bold text-navy-deep">{sched.pkgTitle.id}</h4>
+                <p class="text-muted-foreground flex items-center justify-center md:justify-start gap-2 mt-1">
+                  <svg class="w-4 h-4 text-gold-mid shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-2-6.5V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9.5L1 21l9-2zm7-5V5H5v9.5"/></svg>
+                  {sched.departureCity.id} · {sched.availableSeats} Kursi Tersisa
+                </p>
+              </div>
+              <div class="flex-shrink-0">
+                <a href={`https://wa.me/${settings.primaryWhatsappNumber}?text=Halo, saya tertarik dengan jadwal ${sched.pkgTitle.id} tanggal ${day} ${month}`} class="bg-navy-deep text-gold-mid px-8 py-3 rounded-full font-bold hover:bg-navy-deep/90 transition-colors uppercase text-sm tracking-wider shadow-lg inline-block">
+                  Daftar
+                </a>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </div>
-  </section>
-
-  <!-- Jadwal Keberangkatan Preview -->
-  <section class="container-page py-20">
-    <div class="text-center mb-12">
-      <p class="text-sm font-semibold text-gold uppercase tracking-wider mb-3">Jadwal</p>
-      <h2 class="font-display font-bold text-4xl md:text-5xl text-navy">
-        Jadwal <span class="text-gradient-gold">Keberangkatan</span>
-      </h2>
-    </div>
-
-    <div class="max-w-3xl mx-auto space-y-4">
-      {packages.flatMap(pkg => pkg.departureSchedules.map(sched => ({ ...sched, pkgTitle: pkg.title, pkgSlug: pkg.slug }))).slice(0, 5).map((sched) => (
-        <div class="flex items-center justify-between p-5 rounded-2xl bg-card border border-border shadow-soft hover:shadow-card transition">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-            </div>
-            <div>
-              <p class="font-display font-bold text-navy">{sched.pkgTitle.id}</p>
-              <p class="text-sm text-muted-foreground">{sched.departureCity.id} · {new Date(sched.departureDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-            </div>
-          </div>
-          <div class="text-right">
-            {sched.availableSeats > 0 ? (
-              <span class="px-3 py-1 rounded-full bg-emerald/10 text-emerald text-sm font-medium">
-                {sched.availableSeats} kursi tersisa
-              </span>
-            ) : (
-              <span class="px-3 py-1 rounded-full bg-destructive/10 text-destructive text-sm font-medium">
-                Penuh
-              </span>
-            )}
-          </div>
-        </div>
-      ))}
     </div>
   </section>
 
   <!-- Blog -->
   {posts.length > 0 && (
-    <section class="bg-cream py-20">
-      <div class="container-page">
-        <div class="flex items-end justify-between mb-10">
-          <div>
-            <p class="text-sm font-semibold text-gold uppercase tracking-wider mb-3">Artikel</p>
-            <h2 class="font-display font-bold text-4xl md:text-5xl text-navy">Dari Blog Kami</h2>
-          </div>
-          <a href="/blog" class="text-sm font-medium text-gold hover:underline inline-flex items-center gap-1">
-            Lihat semua
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-            </svg>
+    <section class="py-20 lg:py-28 px-6 lg:px-12 max-w-7xl mx-auto">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <span class="text-gold-mid text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">ARTIKEL</span>
+          <h2 class="text-3xl md:text-[48px] font-bold text-navy-deep">Dari Blog Kami</h2>
+        </div>
+        <a href="/blog" class="text-gold-mid font-semibold flex items-center gap-2 hover:underline text-sm">
+          Lihat semua <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {posts.map((p) => (
+          <a href={`/blog/${p.slug}`} class="group cursor-pointer">
+            <div class="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-surface-container">
+              {p.thumbnailUrl ? (
+                <img src={p.thumbnailUrl} alt={p.title} class="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <div class="w-full h-full flex items-center justify-center">
+                  <svg class="w-16 h-16 text-gold-mid/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+              )}
+            </div>
+            <h4 class="text-lg font-semibold text-navy-deep mb-3 group-hover:text-gold-mid transition-colors">{p.title}</h4>
+            <p class="text-muted-foreground text-base line-clamp-2">{p.excerpt}</p>
           </a>
-        </div>
-        <div class="grid md:grid-cols-3 gap-6">
-          {posts.map((p) => (
-            <a href={`/blog/${p.slug}`} class="group rounded-3xl overflow-hidden bg-card border border-border hover:shadow-card transition">
-              <div class="aspect-[5/3] overflow-hidden bg-cream flex items-center justify-center">
-                <svg class="w-12 h-12 text-gold/30" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/>
-                </svg>
-              </div>
-              <div class="p-6">
-                <h3 class="font-display font-bold text-xl text-navy group-hover:text-gold transition">{p.title}</h3>
-                <p class="text-sm text-muted-foreground mt-2 line-clamp-2">{p.excerpt}</p>
-              </div>
-            </a>
-          ))}
-        </div>
+        ))}
       </div>
     </section>
   )}
 
-  <!-- CTA -->
-  <section class="container-page py-20">
-    <div class="relative overflow-hidden rounded-3xl p-10 md:p-16 text-white" style="background: linear-gradient(135deg, hsl(220 45% 12%) 0%, hsl(155 75% 18%) 50%, hsl(37 62% 36%) 100%);">
-      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-gold/30 blur-3xl"></div>
-      <div class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-emerald/30 blur-3xl"></div>
-      <div class="relative max-w-2xl">
-        <h2 class="font-display font-bold text-4xl md:text-5xl">Siap Menunaikan Ibadah?</h2>
-        <p class="mt-4 text-white/85 text-lg">Tim kami siap membantu Anda mewujudkan perjalanan suci impian. Konsultasi gratis via WhatsApp.</p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <a href={`https://wa.me/${settings.primaryWhatsappNumber}`} class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gold text-navy font-bold hover:bg-gold-light transition">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Hubungi Kami Sekarang
-          </a>
-          <a href="/packages" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border-2 border-white/30 text-white font-semibold hover:bg-white/10 transition">
-            Lihat Paket
-          </a>
-        </div>
+  <!-- CTA Section -->
+  <section class="py-16 lg:py-20 max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="relative bg-gradient-to-br from-[#1b4332] to-[#081c15] rounded-3xl p-10 md:p-16 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-10">
+      <div class="relative z-10 max-w-xl text-center md:text-left">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Siap Menunaikan Ibadah?</h2>
+        <p class="text-white/80 text-lg">
+          Tim kami siap membantu Anda mewujudkan perjalanan suci impian. Konsultasi gratis via WhatsApp.
+        </p>
+      </div>
+      <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
+        <a href={`https://wa.me/${settings.primaryWhatsappNumber}`} class="bg-[#c6a554] text-[#0F0F1B] font-bold px-8 py-3.5 rounded-full flex items-center gap-3 hover:scale-105 transition-all shadow-lg text-sm uppercase tracking-wider">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Hubungi Kami Sekarang
+        </a>
+        <a href="/packages" class="border border-white/40 text-white font-bold px-8 py-3.5 rounded-full hover:bg-white/10 transition-all text-sm uppercase tracking-wider">
+          Lihat Paket
+        </a>
       </div>
     </div>
   </section>

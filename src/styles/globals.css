@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,42 +7,43 @@
 @layer base {
   :root {
     --radius: 0.75rem;
-
-    /* Alkhaleej Travel — Rich Gold & Deep Teal palette */
     --gold-dark: 35 70% 28%;
     --gold: 36 58% 42%;
     --gold-light: 40 50% 58%;
     --gold-warm: 38 65% 52%;
+    --gold-mid: 42 52% 55%;
+    --gold-accent: 30 64% 43%;
     --emerald-deep: 155 75% 18%;
     --emerald: 155 65% 32%;
-    --teal-deep: 190 60% 15%;
-    --teal: 185 50% 28%;
     --navy: 220 50% 10%;
+    --navy-deep: 240 30% 8%;
     --cream: 38 45% 94%;
+    --cream-bg: 40 50% 98%;
     --whatsapp: 142 70% 35%;
+    --brand-green: 152 44% 16%;
 
-    --background: 38 30% 97%;
-    --foreground: 220 50% 10%;
+    --background: 40 43% 98%;
+    --foreground: 240 10% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 220 50% 10%;
+    --card-foreground: 240 10% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 50% 10%;
+    --popover-foreground: 240 10% 10%;
     --primary: 36 58% 42%;
-    --primary-foreground: 38 30% 97%;
+    --primary-foreground: 40 43% 98%;
     --secondary: 38 25% 91%;
-    --secondary-foreground: 220 50% 10%;
+    --secondary-foreground: 240 10% 10%;
     --muted: 38 15% 93%;
-    --muted-foreground: 220 12% 42%;
-    --accent: 185 50% 28%;
-    --accent-foreground: 38 30% 97%;
+    --muted-foreground: 25 10% 40%;
+    --accent: 30 64% 43%;
+    --accent-foreground: 40 43% 98%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 38 15% 86%;
+    --border: 36 15% 87%;
     --input: 38 10% 88%;
     --ring: 36 58% 42%;
-
-    --gradient-gold: linear-gradient(135deg, hsl(36 58% 42%) 0%, hsl(40 50% 58%) 100%);
-    --gradient-hero: linear-gradient(180deg, transparent 0%, hsl(220 50% 10% / 0.3) 50%, hsl(220 50% 10% / 0.95) 100%);
+    --surface-container: 40 14% 91%;
+    --surface-container-high: 35 12% 89%;
+    --surface-container-highest: 40 10% 86%;
   }
 }
 
@@ -67,30 +68,19 @@
   .container-page {
     @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
-  .font-arabic {
-    font-family: 'Amiri', serif;
+  .islamic-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l5 15 15 5-15 5-5 15-5-15-15-5 15-5z' fill='%23C6A554' fill-opacity='0.05'/%3E%3C/svg%3E");
   }
   .text-gradient-gold {
-    background: var(--gradient-gold);
+    background: linear-gradient(135deg, hsl(36 58% 42%) 0%, hsl(40 50% 58%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
-  .text-shadow {
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
   .shadow-soft {
-    box-shadow: 0 8px 30px -12px hsl(220 50% 10% / 0.15);
+    box-shadow: 0 8px 30px -12px rgba(15, 15, 27, 0.12);
   }
   .shadow-card {
-    box-shadow: 0 14px 40px -16px hsl(220 50% 10% / 0.2);
-  }
-  .shadow-glow {
-    box-shadow: 0 20px 60px -20px hsl(36 58% 42% / 0.4);
-  }
-  .surface-glass {
-    background: hsl(var(--background) / 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 14px 40px -16px rgba(15, 15, 27, 0.18);
   }
 }
