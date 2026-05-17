@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 binding = "DB"
 database_name = "alkhaleej-db"
 # TODO: Replace with the actual database_id from `wrangler d1 create alkhaleej-db`
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "e20cf3eb-98f8-42d2-b1ee-d6e6b57cdec7"
 
 # Environment variables (set via Cloudflare dashboard or wrangler secret)
 [vars]

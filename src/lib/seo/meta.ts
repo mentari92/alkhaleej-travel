@@ -20,7 +20,7 @@ export interface MetaTags {
   hreflang: HreflangEntry[];
 }
 
-const SITE_URL = "https://infotour.id";
+const SITE_URL = "https://alkhaleej-travel.pages.dev";
 
 /**
  * Determines if the data is a Destination (has LocalizedString title)

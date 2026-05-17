@@ -1,134 +1,79 @@
 ---
-/**
- * Blog Article Page — Bahasa Indonesia
- * Server-rendered for each request. Fetches article by slug from D1.
- * Includes SEO metadata, OG tags, hreflang to paired article, and JSON-LD.
- * Validates: Requirements 7.1, 7.2, 7.3, 7.4, 11.2, 11.5, 11.6, 11.10
- */
 export const prerender = false;
 
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import ArticleContent from "@/components/blog/ArticleContent.astro";
-import RelatedDestinations from "@/components/blog/RelatedDestinations.astro";
-import { getArticleBySlug, getArticleById } from "@/lib/db/blog";
-import { getDestinationById } from "@/lib/db/destinations";
-import type { Destination } from "@/lib/db/destinations";
+import "@/styles/globals.css";
 import { getDB } from "@/lib/db/connection";
-import { generateMetaTags } from "@/lib/seo/meta";
-import type { Locale } from "@/lib/i18n/config";
-
-const locale: Locale = "id";
-
-const { slug } = Astro.params;
-if (!slug) {
-  return Astro.redirect("/blog/");
-}
-
-let article;
-try {
-  const db = getDB();
-  article = await getArticleBySlug(db, slug);
-} catch {
-  // DB error — return 404 (Requirements 6.1, 6.3)
-  return new Response(null, { status: 404 });
-}
-
-if (!article || article.status !== "published" || article.language !== locale) {
-  return new Response(null, { status: 404 });
-}
+import { getArticleBySlug } from "@/lib/db/blog";
 
 const db = getDB();
-const meta = generateMetaTags(article, locale);
+const { slug } = Astro.params;
 
-// If there's a paired article, get its slug for hreflang
-let pairedArticleSlug: string | null = null;
-if (article.pairedArticleId) {
-  try {
-    const pairedArticle = await getArticleById(db, article.pairedArticleId);
-    if (pairedArticle) {
-      pairedArticleSlug = pairedArticle.slug;
-      // Update hreflang to use the paired article's actual slug
-      const pairedEntry = meta.hreflang.find((h) => h.locale === "en");
-      if (pairedEntry) {
-        pairedEntry.url = `https://infotour.id/en/blog/${pairedArticleSlug}`;
-      }
-    }
-  } catch {
-    // Non-critical: skip paired article hreflang on error
-  }
+let article: any = null;
+try {
+  article = await getArticleBySlug(db, slug);
+} catch { /* empty */ }
+
+if (!article) {
+  return Astro.redirect("/blog");
 }
-
-// Load related destinations
-const relatedDestinations: Destination[] = [];
-for (const destId of article.relatedDestinationIds) {
-  try {
-    const dest = await getDestinationById(db, destId);
-    if (dest && dest.status === "published") {
-      relatedDestinations.push(dest);
-    }
-  } catch {
-    // Non-critical: skip this related destination on error
-  }
-}
-
-// Format publication date
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("id-ID", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-const formattedDate = formatDate(article.publishedAt);
-
-// JSON-LD structured data
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: article.title,
-  description: article.metaDescription,
-  image: article.ogImage || article.thumbnailUrl || undefined,
-  datePublished: article.publishedAt || undefined,
-  dateModified: article.updatedAt,
-  url: meta.canonicalUrl,
-  inLanguage: "id",
-  publisher: {
-    "@type": "Organization",
-    name: "infotour.id",
-    url: "https://infotour.id",
-  },
-};
 ---
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{article.title} — Alkhaleej Travelindo Utama</title>
+  <meta name="description" content={article.metaDescription || article.excerpt} />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+</head>
+<body class="bg-[#fbf9f5] text-[#1b1c1a] font-sans antialiased">
 
-<BaseLayout
-  title={meta.title}
-  description={meta.description}
-  canonicalUrl={meta.canonicalUrl}
-  ogImage={meta.ogImage}
-  ogType={meta.ogType}
-  hreflang={meta.hreflang}
->
-  <Fragment slot="head">
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-  </Fragment>
-
-  <div class="container mx-auto px-4 py-8 md:py-12">
-    <div class="max-w-3xl mx-auto">
-      {formattedDate && (
-        <time
-          datetime={article.publishedAt ?? undefined}
-          class="text-sm text-muted-foreground"
-        >
-          {formattedDate}
-        </time>
-      )}
-
-      <ArticleContent article={article} />
-
-      <RelatedDestinations destinations={relatedDestinations} locale={locale} />
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-[#e4e2de]">
+  <div class="flex justify-between items-center max-w-[1200px] mx-auto px-6 lg:px-12 py-4">
+    <a href="/" class="text-xl md:text-2xl font-bold text-[#0F0F1B]">Alkhaleej Travelindo Utama</a>
+    <div class="hidden md:flex space-x-6 items-center">
+      <a class="text-xs uppercase tracking-wider text-[#0F0F1B] hover:text-[#C6A554] transition-colors" href="/paket">Paket</a>
+      <a class="text-xs uppercase tracking-wider text-[#C6A554] font-bold border-b-2 border-[#C6A554] pb-1" href="/blog">Blog</a>
     </div>
+    <a href="https://wa.me/966563317582" class="bg-[#0F0F1B] text-[#C6A554] px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all">Hubungi Kami</a>
   </div>
-</BaseLayout>
+</nav>
+
+<div class="pt-24">
+  <article class="py-16 px-6 lg:px-12 max-w-[800px] mx-auto">
+    <a href="/blog/" class="text-[#C6A554] text-sm font-semibold flex items-center gap-2 mb-8 hover:underline">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Kembali ke Blog
+    </a>
+
+    {article.thumbnailUrl && (
+      <div class="aspect-[16/9] rounded-2xl overflow-hidden mb-8">
+        <img src={article.thumbnailUrl} alt={article.title} class="w-full h-full object-cover" />
+      </div>
+    )}
+
+    <h1 class="text-3xl md:text-4xl font-bold text-[#0F0F1B] mb-4">{article.title}</h1>
+
+    {article.publishedAt && (
+      <p class="text-[#504537] text-sm mb-8">
+        {new Date(article.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+      </p>
+    )}
+
+    <div class="prose prose-lg max-w-none text-[#504537] leading-relaxed" set:html={article.content} />
+  </article>
+</div>
+
+<footer class="bg-[#332b12] text-[#fdfbf7] pt-12 pb-8">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-12">
+    <div class="text-2xl font-bold text-white mb-4">Alkhaleej Travelindo Utama</div>
+    <p class="text-[#fdfbf7]/70 text-sm">Jl. Bangka Raya RT.011/011, Kec. Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12720</p>
+  </div>
+  <div class="bg-black/20 py-6 px-6 mt-8">
+    <p class="text-[#fdfbf7]/40 text-[10px] text-center tracking-[0.2em] uppercase font-bold">© 2024 ALKHALEEJ TRAVELINDO UTAMA. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+</body>
+</html>

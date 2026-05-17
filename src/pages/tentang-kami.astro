@@ -1,0 +1,250 @@
+---
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Tentang Kami — Alkhaleej Travelindo Utama"
+  description="Mengenal lebih dekat PT Alkhaleej Travelindo Utama, partner terpercaya Anda dalam menunaikan ibadah Haji dan Umrah."
+>
+  {/* Hero Section */}
+  <header class="relative min-h-[70vh] w-full flex items-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img alt="Sunrise Kaabah" class="w-full h-full object-cover" src="/assets/tentang-kami-hero.png" />
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-green/90 via-brand-green/70 to-transparent"></div>
+    </div>
+    <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl pt-20">
+      <div class="max-w-2xl">
+        <span class="text-gold-light text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block">EXPERIENCE EXCELLENCE</span>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight font-serif drop-shadow-md">
+          Melayani Perjalanan Suci dengan Sepenuh Hati
+        </h1>
+        <p class="text-white/90 text-lg md:text-xl leading-relaxed mb-10 drop-shadow">
+          Alkhaleej Travelindo Utama hadir sebagai mitra terpercaya Anda dalam membimbing langkah suci menuju Baitullah.
+        </p>
+        <a href="#dedikasi" class="inline-block bg-gold-mid hover:bg-gold-accent text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+          Pelajari Lebih Lanjut
+        </a>
+      </div>
+    </div>
+  </header>
+
+  {/* Dedikasi Section */}
+  <section id="dedikasi" class="py-24 px-6 sm:px-8 lg:px-16 max-w-7xl mx-auto">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+      <div class="lg:w-1/2">
+        <div class="w-16 h-1 bg-gold-mid mb-8"></div>
+        <h2 class="text-3xl md:text-4xl font-bold text-brand-green mb-8 font-serif leading-tight">
+          Dedikasi Untuk Ibadah Yang Sempurna
+        </h2>
+        <div class="space-y-6 text-gray-600 text-sm md:text-base leading-relaxed">
+          <p>
+            Berawal dari kerinduan untuk memberikan pelayanan Haji dan Umrah yang tidak hanya nyaman secara logistik, namun juga kaya secara spiritual, Alkhaleej Travelindo Utama didirikan dengan satu nilai utama: Amanah.
+          </p>
+          <p>
+            Selama bertahun-tahun, kami telah menemani ribuan jamaah dari berbagai penjuru tanah air. Kami memahami bahwa setiap perjalanan ke Tanah Suci adalah momen sekali seumur hidup yang penuh makna. Itulah mengapa kami mengkurasi setiap aspek perjalanan, mulai dari akomodasi hotel bintang 5 yang dekat, hingga bimbingan manasik yang mendalam sesuai sunnah.
+          </p>
+        </div>
+      </div>
+      <div class="lg:w-1/2">
+        <div class="rounded-3xl overflow-hidden shadow-2xl">
+          <img src="/assets/hotel-lounge-mekkah.png" alt="Lounge Hotel Mekkah" class="w-full h-full object-cover aspect-video lg:aspect-[4/3] hover:scale-105 transition-transform duration-700" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Visi Misi Section (Navy replaced with Green) */}
+  <section class="py-24 bg-brand-green text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+         <path fill-rule="evenodd" d="M 15 100 L 15 60 C 5 45 20 35 20 20 C 20 35 35 45 25 60 L 25 65 L 45 65 L 45 45 C 35 25 65 15 70 5 C 75 15 105 25 95 45 L 95 100 Z" fill="currentColor"/>
+       </svg>
+    </div>
+    <div class="container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 font-serif">Visi & Misi Kami</h2>
+        <p class="text-white/70 text-sm tracking-wide">Landasan kami dalam melayani tamu Allah</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        {/* Visi */}
+        <div class="bg-gray-900/60 border border-gray-700/50 rounded-3xl p-10 md:p-12 hover:border-gold-mid/50 transition-colors backdrop-blur-sm shadow-xl">
+          <div class="text-gold-mid mb-6">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4 font-serif">Visi</h3>
+          <p class="text-white/80 leading-relaxed text-sm">
+            Menjadi penyelenggara perjalanan ibadah Haji dan Umrah terkemuka di Indonesia yang diakui karena keunggulan layanan, integritas bimbingan, dan komitmen terhadap kenyamanan jamaah.
+          </p>
+        </div>
+        
+        {/* Misi */}
+        <div class="bg-gray-900/60 border border-gray-700/50 rounded-3xl p-10 md:p-12 hover:border-gold-mid/50 transition-colors backdrop-blur-sm shadow-xl">
+          <div class="text-gold-mid mb-6">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4 font-serif">Misi</h3>
+          <ul class="space-y-4 text-white/80 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="text-gold-mid mt-1">•</span>
+              <span>Menyediakan paket perjalanan yang komprehensif dengan standar kualitas internasional.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-gold-mid mt-1">•</span>
+              <span>Memberikan bimbingan ibadah yang edukatif dan interaktif berdasarkan Al-Qur'an dan Sunnah.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-gold-mid mt-1">•</span>
+              <span>Mengutamakan keselamatan, keamanan, dan kepuasan jamaah disetiap tahapan perjalanan.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Nilai-Nilai Utama Section */}
+  <section class="py-24 bg-cream-bg">
+    <div class="container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-brand-green mb-4 font-serif">Nilai-Nilai Utama</h2>
+        <p class="text-gray-500 text-sm tracking-wide">Prinsip yang selalu kami pegang teguh dalam setiap pelayanan yang kami berikan kepada jamaah.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-xl transition-shadow">
+          <div class="w-14 h-14 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-green mb-4 font-serif">Amanah (Trust)</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            Menjaga kepercayaan jamaah sebagai prioritas tertinggi dengan transparansi dan kejujuran di setiap proses.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-xl transition-shadow">
+          <div class="w-14 h-14 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-green mb-4 font-serif">Keunggulan</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            Berkomitmen memberikan layanan kelas dunia, mulai dari persiapan administrasi hingga kepulangan ke tanah air.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-xl transition-shadow">
+          <div class="w-14 h-14 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-green mb-4 font-serif">Pelayanan</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            Melayani jamaah dengan keramahan dan ketulusan, layaknya keluarga sendiri untuk kenyamanan beribadah.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Hubungi Kami Section */}
+  <section class="py-24 bg-white">
+    <div class="container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-brand-green mb-4 font-serif">Hubungi Kami</h2>
+        <p class="text-gray-500 text-sm tracking-wide">Kami siap membantu merencanakan perjalanan ibadah Anda. Hubungi kami kapan saja.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        {/* Contact Form */}
+        <div class="bg-white p-10 rounded-3xl shadow-lg border border-gray-100">
+          <form class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Nama Lengkap</label>
+                <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-colors" placeholder="Masukkan nama Anda" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Email</label>
+                <input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-colors" placeholder="email@contoh.com" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Nomor WhatsApp</label>
+              <input type="tel" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-colors" placeholder="+62 812..." />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Pesan</label>
+              <textarea rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition-colors" placeholder="Tuliskan pesan Anda di sini..."></textarea>
+            </div>
+            <button type="button" class="w-full bg-brand-green hover:bg-opacity-90 text-white font-bold py-4 rounded-xl transition-all shadow-md mt-4">
+              Kirim Pesan
+            </button>
+          </form>
+        </div>
+        
+        {/* Contact Info & Map */}
+        <div class="space-y-8">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-cream-bg rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-green text-lg mb-1 font-serif">Alamat Kantor</h4>
+              <p class="text-gray-500 text-sm">Jl. Bangka Raya RT.011/011, Kec. Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12720</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-cream-bg rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-green text-lg mb-1 font-serif">Email</h4>
+              <p class="text-gray-500 text-sm">fifi@travelindo-utama.com</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-cream-bg rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-gold-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-green text-lg mb-1 font-serif">WhatsApp</h4>
+              <p class="text-gray-500 text-sm">+966 56 331 7582</p>
+            </div>
+          </div>
+          
+          <div class="mt-8 rounded-3xl overflow-hidden shadow-lg border border-gray-100 relative h-48">
+            <img src="/assets/contact-map.png" alt="Map View" class="w-full h-full object-cover grayscale opacity-80" />
+            <div class="absolute inset-0 bg-brand-green/20"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <a href="#" class="bg-white/90 backdrop-blur px-6 py-2 rounded-full text-sm font-bold text-brand-green flex items-center gap-2 shadow-sm hover:bg-white transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                Lihat di Maps
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Partners Section */}
+  <section class="py-12 bg-gray-50 border-t border-gray-200">
+    <div class="container mx-auto px-6 sm:px-8 lg:px-16 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale">
+      <div class="flex items-center gap-3 font-bold text-gray-800 text-sm tracking-widest uppercase">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+        Kemenag RI Certified
+      </div>
+      <div class="flex items-center gap-3 font-bold text-gray-800 text-sm tracking-widest uppercase">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        IATA Provider
+      </div>
+      <div class="flex items-center gap-3 font-bold text-gray-800 text-sm tracking-widest uppercase">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+        ASITA Member
+      </div>
+    </div>
+  </section>
+</BaseLayout>

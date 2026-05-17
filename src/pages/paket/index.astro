@@ -1,0 +1,85 @@
+---
+export const prerender = false;
+
+import "@/styles/globals.css";
+import { getDB } from "@/lib/db/connection";
+import type { PackageRow } from "@/lib/db/schema";
+
+const db = getDB();
+
+let packages: PackageRow[] = [];
+try {
+  const result = await db
+    .prepare("SELECT * FROM packages WHERE status = 'published' ORDER BY created_at DESC")
+    .all<PackageRow>();
+  packages = result.results;
+} catch { /* empty */ }
+---
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paket Haji & Umrah — Alkhaleej Travelindo Utama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+</head>
+<body class="bg-[#fbf9f5] text-[#1b1c1a] font-sans antialiased">
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-[#e4e2de]">
+  <div class="flex justify-between items-center max-w-[1200px] mx-auto px-6 lg:px-12 py-4">
+    <a href="/" class="text-xl md:text-2xl font-bold text-[#0F0F1B]">Alkhaleej Travelindo Utama</a>
+    <div class="hidden md:flex space-x-6 items-center">
+      <a class="text-xs uppercase tracking-wider text-[#C6A554] font-bold border-b-2 border-[#C6A554] pb-1" href="/paket">Paket</a>
+      <a class="text-xs uppercase tracking-wider text-[#0F0F1B] hover:text-[#C6A554] transition-colors" href="/blog">Blog</a>
+      <a class="text-xs uppercase tracking-wider text-[#0F0F1B] hover:text-[#C6A554] transition-colors" href="/tentang-kami">Tentang Kami</a>
+    </div>
+    <a href="https://wa.me/966563317582" class="bg-[#0F0F1B] text-[#C6A554] px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all">Hubungi Kami</a>
+  </div>
+</nav>
+
+<div class="pt-24">
+  <section class="py-16 px-6 lg:px-12 max-w-[1100px] mx-auto">
+    <div class="text-center mb-16">
+      <span class="text-[#C6A554] text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">PAKET KAMI</span>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#0F0F1B]">Paket Perjalanan Suci</h1>
+      <p class="mt-4 text-[#504537] max-w-xl mx-auto">Pilih paket ibadah yang sesuai dengan kebutuhan dan anggaran Anda.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+      {packages.map((pkg) => (
+        <a href={`/paket/${pkg.slug}/`} class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500">
+          <div class="relative h-64 overflow-hidden">
+            <img alt={pkg.title_id} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src={pkg.hero_image || "/assets/kaabah-masjidil-haram.jpg"} />
+            <div class="absolute top-4 left-4 bg-[#C6A554] text-[#0F0F1B] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
+              {pkg.package_type === "haji_mujamalah" ? "HAJI MUJAMALAH" : "UMRAH"}
+            </div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-2xl lg:text-3xl font-bold text-[#0F0F1B] mb-2">{pkg.title_id}</h3>
+            <p class="text-[#C6A554] text-sm font-semibold uppercase tracking-tight mb-4">{pkg.tagline_id}</p>
+            <p class="text-[#504537] mb-6 line-clamp-3">{pkg.about_text_id}</p>
+            <span class="flex items-center text-[#C6A554] font-bold hover:gap-4 transition-all duration-300">
+              Lihat Detail
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer class="bg-[#332b12] text-[#fdfbf7] pt-16 overflow-hidden">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-12 pb-16">
+    <div class="text-2xl font-bold text-white mb-6">Alkhaleej Travelindo Utama</div>
+    <p class="text-[#fdfbf7]/70 text-sm">Jl. Bangka Raya RT.011/011, Kec. Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12720</p>
+  </div>
+  <div class="bg-black/20 py-8 px-6">
+    <p class="text-[#fdfbf7]/40 text-[10px] text-center tracking-[0.2em] uppercase font-bold">© 2024 ALKHALEEJ TRAVELINDO UTAMA. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+</body>
+</html>

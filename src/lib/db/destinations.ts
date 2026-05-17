@@ -234,7 +234,7 @@ export async function createDestination(
   statements.push(
     db
       .prepare(
-        `INSERT INTO destinations (id, slug, title_id, title_en, tagline_id, tagline_en, hero_image, about_text_id, about_text_en, whatsapp_number, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO packages (id, slug, title_id, title_en, tagline_id, tagline_en, hero_image, about_text_id, about_text_en, whatsapp_number, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .bind(
         id,
@@ -258,7 +258,7 @@ export async function createDestination(
     statements.push(
       db
         .prepare(
-          `INSERT INTO gallery_images (id, destination_id, url, alt_id, alt_en, sort_order) VALUES (?, ?, ?, ?, ?, ?)`
+          `INSERT INTO gallery_images (id, package_id, url, alt_id, alt_en, sort_order) VALUES (?, ?, ?, ?, ?, ?)`
         )
         .bind(generateId(), id, img.url, img.alt.id, img.alt.en, img.order)
     );
@@ -269,7 +269,7 @@ export async function createDestination(
     statements.push(
       db
         .prepare(
-          `INSERT INTO service_packages (id, destination_id, name_id, name_en, description_id, description_en, price, features_id, features_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          `INSERT INTO service_packages (id, package_id, name_id, name_en, description_id, description_en, price, features_id, features_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         )
         .bind(
           svc.id || generateId(),
@@ -290,7 +290,7 @@ export async function createDestination(
     statements.push(
       db
         .prepare(
-          `INSERT INTO testimonials (id, destination_id, author, content_id, content_en, rating) VALUES (?, ?, ?, ?, ?, ?)`
+          `INSERT INTO testimonials (id, package_id, author, content_id, content_en, rating) VALUES (?, ?, ?, ?, ?, ?)`
         )
         .bind(t.id || generateId(), id, t.author, t.content.id, t.content.en, t.rating)
     );
@@ -301,7 +301,7 @@ export async function createDestination(
     statements.push(
       db
         .prepare(
-          `INSERT INTO faq_entries (id, destination_id, question_id, question_en, answer_id, answer_en, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)`
+          `INSERT INTO faq_entries (id, package_id, question_id, question_en, answer_id, answer_en, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)`
         )
         .bind(f.id || generateId(), id, f.question.id, f.question.en, f.answer.id, f.answer.en, f.order)
     );
@@ -442,7 +442,7 @@ export async function updateDestination(
     statements.push(
       db
         .prepare(
-          `UPDATE destinations SET ${setClauses.join(", ")} WHERE id = ?`
+          `UPDATE packages SET ${setClauses.join(", ")} WHERE id = ?`
         )
         .bind(...bindArgs, id)
     );
@@ -451,13 +451,13 @@ export async function updateDestination(
   // Gallery images — only if explicitly provided (including empty array)
   if (input.galleryImages !== undefined) {
     statements.push(
-      db.prepare("DELETE FROM gallery_images WHERE destination_id = ?").bind(id)
+      db.prepare("DELETE FROM gallery_images WHERE package_id = ?").bind(id)
     );
     for (const img of input.galleryImages) {
       statements.push(
         db
           .prepare(
-            `INSERT INTO gallery_images (id, destination_id, url, alt_id, alt_en, sort_order) VALUES (?, ?, ?, ?, ?, ?)`
+            `INSERT INTO gallery_images (id, package_id, url, alt_id, alt_en, sort_order) VALUES (?, ?, ?, ?, ?, ?)`
           )
           .bind(generateId(), id, img.url, img.alt.id, img.alt.en, img.order)
       );
@@ -467,13 +467,13 @@ export async function updateDestination(
   // Services (tiers) — only if explicitly provided
   if (input.services !== undefined) {
     statements.push(
-      db.prepare("DELETE FROM service_packages WHERE destination_id = ?").bind(id)
+      db.prepare("DELETE FROM service_packages WHERE package_id = ?").bind(id)
     );
     for (const svc of input.services) {
       statements.push(
         db
           .prepare(
-            `INSERT INTO service_packages (id, destination_id, name_id, name_en, description_id, description_en, price, features_id, features_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+            `INSERT INTO service_packages (id, package_id, name_id, name_en, description_id, description_en, price, features_id, features_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
           )
           .bind(
             svc.id || generateId(),
@@ -493,13 +493,13 @@ export async function updateDestination(
   // Testimonials — only if explicitly provided
   if (input.testimonials !== undefined) {
     statements.push(
-      db.prepare("DELETE FROM testimonials WHERE destination_id = ?").bind(id)
+      db.prepare("DELETE FROM testimonials WHERE package_id = ?").bind(id)
     );
     for (const t of input.testimonials) {
       statements.push(
         db
           .prepare(
-            `INSERT INTO testimonials (id, destination_id, author, content_id, content_en, rating) VALUES (?, ?, ?, ?, ?, ?)`
+            `INSERT INTO testimonials (id, package_id, author, content_id, content_en, rating) VALUES (?, ?, ?, ?, ?, ?)`
           )
           .bind(t.id || generateId(), id, t.author, t.content.id, t.content.en, t.rating)
       );
@@ -509,13 +509,13 @@ export async function updateDestination(
   // FAQ entries — only if explicitly provided
   if (input.faqEntries !== undefined) {
     statements.push(
-      db.prepare("DELETE FROM faq_entries WHERE destination_id = ?").bind(id)
+      db.prepare("DELETE FROM faq_entries WHERE package_id = ?").bind(id)
     );
     for (const f of input.faqEntries) {
       statements.push(
         db
           .prepare(
-            `INSERT INTO faq_entries (id, destination_id, question_id, question_en, answer_id, answer_en, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)`
+            `INSERT INTO faq_entries (id, package_id, question_id, question_en, answer_id, answer_en, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)`
           )
           .bind(f.id || generateId(), id, f.question.id, f.question.en, f.answer.id, f.answer.en, f.order)
       );
@@ -540,7 +540,7 @@ export async function updateDestinationStatus(
 ): Promise<void> {
   const now = new Date().toISOString().replace("T", " ").slice(0, 19);
   await db
-    .prepare("UPDATE destinations SET status = ?, updated_at = ? WHERE id = ?")
+    .prepare("UPDATE packages SET status = ?, updated_at = ? WHERE id = ?")
     .bind(status, now, id)
     .run();
 }
@@ -553,7 +553,7 @@ export async function deleteDestination(
   id: string
 ): Promise<void> {
   await db
-    .prepare("DELETE FROM destinations WHERE id = ?")
+    .prepare("DELETE FROM packages WHERE id = ?")
     .bind(id)
     .run();
 }
@@ -565,7 +565,7 @@ export async function getDestinationsCount(
   db: D1Database
 ): Promise<number> {
   const row = await db
-    .prepare("SELECT COUNT(*) as count FROM destinations WHERE status = 'published'")
+    .prepare("SELECT COUNT(*) as count FROM packages WHERE status = 'published'")
     .first<{ count: number }>();
   return row?.count ?? 0;
 }

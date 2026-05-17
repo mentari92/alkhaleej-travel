@@ -1,0 +1,181 @@
+---
+export const prerender = false;
+
+import "@/styles/globals.css";
+import { getDB } from "@/lib/db/connection";
+import type { PackageRow, PackageTierRow, DepartureScheduleRow } from "@/lib/db/schema";
+
+const db = getDB();
+const { slug } = Astro.params;
+
+let pkg: PackageRow | null = null;
+let tiers: PackageTierRow[] = [];
+let schedules: DepartureScheduleRow[] = [];
+
+try {
+  pkg = await db
+    .prepare("SELECT * FROM packages WHERE slug = ? AND status = 'published'")
+    .bind(slug)
+    .first<PackageRow>();
+
+  if (pkg) {
+    const tiersResult = await db
+      .prepare("SELECT * FROM package_tiers WHERE package_id = ? ORDER BY sort_order")
+      .bind(pkg.id)
+      .all<PackageTierRow>();
+    tiers = tiersResult.results;
+
+    const schedResult = await db
+      .prepare("SELECT * FROM departure_schedules WHERE package_id = ? AND status = 'open' ORDER BY departure_date")
+      .bind(pkg.id)
+      .all<DepartureScheduleRow>();
+    schedules = schedResult.results;
+  }
+} catch { /* empty */ }
+
+if (!pkg) {
+  return Astro.redirect("/paket");
+}
+
+const formatDate = (d: string) => {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+---
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pkg.title_id} — Alkhaleej Travelindo Utama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+</head>
+<body class="bg-[#fbf9f5] text-[#1b1c1a] font-sans antialiased">
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-[#e4e2de]">
+  <div class="flex justify-between items-center max-w-[1200px] mx-auto px-6 lg:px-12 py-4">
+    <a href="/" class="text-xl md:text-2xl font-bold text-[#0F0F1B]">Alkhaleej Travelindo Utama</a>
+    <div class="hidden md:flex space-x-6 items-center">
+      <a class="text-xs uppercase tracking-wider text-[#C6A554] font-bold border-b-2 border-[#C6A554] pb-1" href="/paket">Paket</a>
+      <a class="text-xs uppercase tracking-wider text-[#0F0F1B] hover:text-[#C6A554] transition-colors" href="/blog">Blog</a>
+    </div>
+    <a href="https://wa.me/966563317582" class="bg-[#0F0F1B] text-[#C6A554] px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all">Hubungi Kami</a>
+  </div>
+</nav>
+
+<div class="pt-20">
+  <!-- Hero -->
+  <header class="relative h-[50vh] w-full flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img alt={pkg.title_id} class="w-full h-full object-cover" src={pkg.hero_image || "/assets/kaabah-masjidil-haram.jpg"} />
+      <div class="absolute inset-0 bg-[#0F0F1B]/60"></div>
+    </div>
+    <div class="relative z-10 text-center px-6">
+      <div class="inline-block bg-[#C6A554] text-[#0F0F1B] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+        {pkg.package_type === "haji_mujamalah" ? "HAJI MUJAMALAH" : "UMRAH"}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">{pkg.title_id}</h1>
+      <p class="text-[#C6A554] text-lg font-semibold">{pkg.tagline_id}</p>
+    </div>
+  </header>
+
+  <!-- About -->
+  <section class="py-16 px-6 lg:px-12 max-w-[800px] mx-auto text-center">
+    <h2 class="text-3xl font-bold text-[#0F0F1B] mb-6">Tentang Paket Ini</h2>
+    <p class="text-[#504537] text-lg leading-relaxed">{pkg.about_text_id}</p>
+  </section>
+
+  <!-- Tiers -->
+  {tiers.length > 0 && (
+  <section class="py-16 px-6 lg:px-12 max-w-[1100px] mx-auto">
+    <h2 class="text-3xl font-bold text-[#0F0F1B] mb-12 text-center">Pilihan Paket</h2>
+    <div class="grid grid-cols-1 md:grid-cols-{tiers.length > 2 ? '3' : '2'} gap-8">
+      {tiers.map((tier, i) => {
+        const features: string[] = JSON.parse(tier.features_id || "[]");
+        const colors = [
+          "bg-white border-[#e4e2de]",
+          "bg-white border-[#C6A554] ring-2 ring-[#C6A554]/20",
+          "bg-[#0F0F1B] text-[#D3B96B] border-[#C6A554]"
+        ];
+        const isDark = i === 2;
+        return (
+          <div class:list={["rounded-2xl border-2 p-8 shadow-sm", colors[i] || colors[0]]}>
+            {i === 1 && <div class="text-center text-[#C6A554] text-xs font-bold uppercase tracking-widest mb-4">Rekomendasi</div>}
+            <h3 class="text-2xl font-bold mb-2">{tier.name_id}</h3>
+            <p class="text-sm mb-4 opacity-70">{tier.duration_id} · {tier.airline || ""}</p>
+            <div class="text-3xl font-bold mb-2">{tier.price}</div>
+            <p class:list={["text-sm mb-6", isDark ? "text-[#D3B96B]/70" : "text-[#504537]"]}>{tier.description_id}</p>
+            <ul class="space-y-3 mb-8">
+              {features.map((f: string) => (
+                <li class:list={["flex items-center gap-3 text-sm", isDark ? "text-[#fdfbf7]/80" : "text-[#504537]"]}>
+                  <svg class:list={["w-5 h-5 shrink-0", isDark ? "text-[#C6A554]" : "text-[#1B4332]"]} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a href={`https://wa.me/966563317582?text=Halo, saya tertarik dengan paket ${pkg!.title_id} - ${tier.name_id}`} class:list={[
+              "block text-center font-bold py-3 rounded-xl transition-all",
+              isDark ? "bg-[#C6A554] text-[#0F0F1B] hover:bg-[#D3B96B]" : "bg-[#1B4332] text-white hover:bg-[#0F0F1B]"
+            ]}>
+              Pilih Paket
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+  )}
+
+  <!-- Schedules -->
+  {schedules.length > 0 && (
+  <section class="py-16 px-6 lg:px-12 max-w-[800px] mx-auto">
+    <h2 class="text-3xl font-bold text-[#0F0F1B] mb-12 text-center">Jadwal Keberangkatan</h2>
+    <div class="space-y-4">
+      {schedules.map((sched) => (
+        <div class="bg-white p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 shadow-sm border border-[#efeeea]">
+          <div class="flex-grow text-center md:text-left">
+            <h4 class="font-bold text-[#0F0F1B]">{formatDate(sched.departure_date)}</h4>
+            <p class="text-[#504537] text-sm mt-1">{sched.departure_city_id} · {sched.available_seats} Kursi Tersisa</p>
+          </div>
+          <a href={`https://wa.me/966563317582?text=Halo, saya tertarik jadwal ${formatDate(sched.departure_date)}`} class="bg-[#1B4332] text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-[#0F0F1B] transition-all">Daftar</a>
+        </div>
+      ))}
+    </div>
+  </section>
+  )}
+
+  <!-- CTA -->
+  <section class="py-16 max-w-[1100px] mx-auto px-6 lg:px-12">
+    <div class="bg-gradient-to-br from-[#1b4332] to-[#081c15] rounded-3xl p-10 md:p-14 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-10">
+      <div class="max-w-xl text-center md:text-left">
+        <h2 class="text-3xl font-bold text-white mb-4">Tertarik dengan paket ini?</h2>
+        <p class="text-white/80 text-lg">Hubungi kami sekarang untuk konsultasi gratis dan pemesanan.</p>
+      </div>
+      <a href={`https://wa.me/966563317582?text=Halo, saya tertarik dengan paket ${pkg.title_id}`} class="bg-[#c6a554] text-[#0F0F1B] font-bold px-8 py-3.5 rounded-full flex items-center gap-3 hover:scale-105 transition-all shadow-lg text-sm uppercase tracking-wider shrink-0">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Hubungi via WhatsApp
+      </a>
+    </div>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer class="bg-[#332b12] text-[#fdfbf7] pt-12 pb-8">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-12">
+    <div class="text-2xl font-bold text-white mb-4">Alkhaleej Travelindo Utama</div>
+    <p class="text-[#fdfbf7]/70 text-sm">Jl. Bangka Raya RT.011/011, Kec. Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12720</p>
+  </div>
+  <div class="bg-black/20 py-6 px-6 mt-8">
+    <p class="text-[#fdfbf7]/40 text-[10px] text-center tracking-[0.2em] uppercase font-bold">© 2024 ALKHALEEJ TRAVELINDO UTAMA. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+<!-- WhatsApp FAB -->
+<a class="fixed bottom-8 right-8 bg-[#25D366] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform active:scale-95 z-50" href="https://wa.me/966563317582">
+  <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+</body>
+</html>

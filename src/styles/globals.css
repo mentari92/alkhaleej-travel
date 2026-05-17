@@ -1,86 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --radius: 0.75rem;
-    --gold-dark: 35 70% 28%;
-    --gold: 36 58% 42%;
-    --gold-light: 40 50% 58%;
-    --gold-warm: 38 65% 52%;
-    --gold-mid: 42 52% 55%;
-    --gold-accent: 30 64% 43%;
-    --emerald-deep: 155 75% 18%;
-    --emerald: 155 65% 32%;
-    --navy: 220 50% 10%;
-    --navy-deep: 240 30% 8%;
-    --cream: 38 45% 94%;
-    --cream-bg: 40 50% 98%;
-    --whatsapp: 142 70% 35%;
-    --brand-green: 152 44% 16%;
+    --navy-deep: #0F0F1B;
+    --gold-mid: #C6A554;
+    --gold-light: #D3B96B;
+    --cream-bg: #FDFBF7;
+    --brand-green: #1B4332;
+    --white: #FFFFFF;
+    
+    --radius-premium: 24px;
+    --shadow-premium: 0 10px 40px -10px rgba(15, 15, 27, 0.08);
+  }
 
-    --background: 40 43% 98%;
-    --foreground: 240 10% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
-    --primary: 36 58% 42%;
-    --primary-foreground: 40 43% 98%;
-    --secondary: 38 25% 91%;
-    --secondary-foreground: 240 10% 10%;
-    --muted: 38 15% 93%;
-    --muted-foreground: 25 10% 40%;
-    --accent: 30 64% 43%;
-    --accent-foreground: 40 43% 98%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 36 15% 87%;
-    --input: 38 10% 88%;
-    --ring: 36 58% 42%;
-    --surface-container: 40 14% 91%;
-    --surface-container-high: 35 12% 89%;
-    --surface-container-highest: 40 10% 86%;
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    background-color: var(--white);
+    color: var(--navy-deep);
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-@layer base {
-  html { scroll-behavior: smooth; }
-  * { @apply border-border; }
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    @apply bg-background text-foreground antialiased;
+@layer components {
+  .premium-card {
+    @apply bg-white border border-black/5 rounded-[var(--radius-premium)] transition-all duration-500 hover:shadow-[var(--shadow-premium)] hover:-translate-y-1;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    letter-spacing: -0.025em;
-    font-weight: 700;
+
+  .btn-premium {
+    @apply px-8 py-3.5 rounded-full font-bold uppercase tracking-[0.1em] transition-all duration-300 active:scale-95 inline-flex items-center justify-center border-none text-xs;
+  }
+
+  .btn-premium-dark {
+    @apply btn-premium bg-[var(--brand-green)] text-white shadow-lg hover:bg-[var(--brand-green-light)];
+  }
+  
+  .btn-premium-gold {
+    @apply btn-premium bg-[var(--gold-mid)] text-[var(--navy-deep)] shadow-lg hover:opacity-90;
+  }
+
+  .btn-premium-outline {
+    @apply btn-premium border-2 border-white/30 text-white hover:bg-white/10;
+  }
+
+  .glass-header {
+    @apply bg-white/90 backdrop-blur-md border-b border-black/5;
   }
 }
 
 @layer utilities {
-  .container-site {
-    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
-  }
-  .container-page {
-    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
-  }
   .islamic-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l5 15 15 5-15 5-5 15-5-15-15-5 15-5z' fill='%23C6A554' fill-opacity='0.05'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0l5 20 20 5-20 5-5 20-5-20-20-5 20-5z' fill='%23C6A554' fill-opacity='0.04'/%3E%3C/svg%3E");
   }
-  .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(36 58% 42%) 0%, hsl(40 50% 58%) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+
+  .islamic-pattern-dark {
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0l6 25 25 6-25 6-6 25-6-25-25-6 25-6z' fill='%23FFFFFF' fill-opacity='0.03'/%3E%3C/svg%3E");
   }
-  .shadow-soft {
-    box-shadow: 0 8px 30px -12px rgba(15, 15, 27, 0.12);
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
   }
-  .shadow-card {
-    box-shadow: 0 14px 40px -16px rgba(15, 15, 27, 0.18);
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }

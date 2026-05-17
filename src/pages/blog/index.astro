@@ -1,59 +1,77 @@
 ---
-/**
- * Blog Listing Page — Bahasa Indonesia
- * Displays all published blog articles in Bahasa Indonesia.
- * Server-rendered (SSR).
- * Validates: Requirements 7.1, 7.2, 11.2, 11.5, 11.10
- */
 export const prerender = false;
 
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import ArticleCard from "@/components/blog/ArticleCard.astro";
-import { listPublishedArticles } from "@/lib/db/blog";
+import "@/styles/globals.css";
 import { getDB } from "@/lib/db/connection";
-import type { HreflangEntry } from "@/layouts/BaseLayout.astro";
-import type { Locale } from "@/lib/i18n/config";
+import { listPublishedArticles } from "@/lib/db/blog";
 
-const locale: Locale = "id";
+const db = getDB();
 
 let articles: any[] = [];
 try {
-  const db = getDB();
-  articles = await listPublishedArticles(db, locale);
-} catch {
-  articles = [];
-}
-
-const hreflang: HreflangEntry[] = [
-  { locale: "id", url: "https://infotour.id/blog/" },
-  { locale: "en", url: "https://infotour.id/en/blog/" },
-];
+  articles = await listPublishedArticles(db, "id");
+} catch { /* empty */ }
 ---
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Alkhaleej Travelindo Utama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+</head>
+<body class="bg-[#fbf9f5] text-[#1b1c1a] font-sans antialiased">
 
-<BaseLayout
-  title="Blog - infotour.id"
-  description="Baca artikel terbaru tentang wisata Indonesia. Tips perjalanan, panduan destinasi, dan informasi berguna untuk liburan Anda."
-  canonicalUrl="https://infotour.id/blog/"
-  hreflang={hreflang}
->
-  <section class="container mx-auto px-4 py-8 md:py-12">
-    <h1 class="text-3xl font-bold md:text-4xl lg:text-5xl">
-      Blog Wisata
-    </h1>
-    <p class="mt-4 max-w-2xl text-muted-foreground">
-      Temukan artikel menarik tentang destinasi wisata Indonesia, tips perjalanan, dan panduan liburan.
-    </p>
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-[#e4e2de]">
+  <div class="flex justify-between items-center max-w-[1200px] mx-auto px-6 lg:px-12 py-4">
+    <a href="/" class="text-xl md:text-2xl font-bold text-[#0F0F1B]">Alkhaleej Travelindo Utama</a>
+    <div class="hidden md:flex space-x-6 items-center">
+      <a class="text-xs uppercase tracking-wider text-[#0F0F1B] hover:text-[#C6A554] transition-colors" href="/paket">Paket</a>
+      <a class="text-xs uppercase tracking-wider text-[#C6A554] font-bold border-b-2 border-[#C6A554] pb-1" href="/blog">Blog</a>
+    </div>
+    <a href="https://wa.me/966563317582" class="bg-[#0F0F1B] text-[#C6A554] px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all">Hubungi Kami</a>
+  </div>
+</nav>
 
-    <div class="mt-8 md:mt-12">
-      {articles.length > 0 ? (
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard article={article} locale={locale} />
-          ))}
-        </div>
-      ) : (
-        <p class="text-muted-foreground">Belum ada artikel yang tersedia.</p>
+<div class="pt-24">
+  <section class="py-16 px-6 lg:px-12 max-w-[1200px] mx-auto">
+    <div class="text-center mb-16">
+      <span class="text-[#C6A554] text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">ARTIKEL</span>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#0F0F1B]">Blog & Panduan</h1>
+      <p class="mt-4 text-[#504537] max-w-xl mx-auto">Artikel dan panduan seputar ibadah Haji dan Umrah.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {articles.length > 0 ? articles.map((p) => (
+        <a href={`/blog/${p.slug}/`} class="group cursor-pointer">
+          <div class="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-[#efeeea]">
+            {p.thumbnailUrl ? (
+              <img src={p.thumbnailUrl} alt={p.title} class="w-full h-full object-cover" />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center">
+                <svg class="w-16 h-16 text-[#C6A554]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+            )}
+          </div>
+          <h4 class="text-lg font-semibold text-[#0F0F1B] mb-3 group-hover:text-[#C6A554] transition-colors">{p.title}</h4>
+          <p class="text-[#504537] line-clamp-2">{p.excerpt}</p>
+        </a>
+      )) : (
+        <p class="col-span-3 text-center text-[#504537] py-16">Belum ada artikel.</p>
       )}
     </div>
   </section>
-</BaseLayout>
+</div>
+
+<footer class="bg-[#332b12] text-[#fdfbf7] pt-12 pb-8">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-12">
+    <div class="text-2xl font-bold text-white mb-4">Alkhaleej Travelindo Utama</div>
+    <p class="text-[#fdfbf7]/70 text-sm">Jl. Bangka Raya RT.011/011, Kec. Mampang Prapatan, Jakarta Selatan, DKI Jakarta 12720</p>
+  </div>
+  <div class="bg-black/20 py-6 px-6 mt-8">
+    <p class="text-[#fdfbf7]/40 text-[10px] text-center tracking-[0.2em] uppercase font-bold">© 2024 ALKHALEEJ TRAVELINDO UTAMA. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+</body>
+</html>

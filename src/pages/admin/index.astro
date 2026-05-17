@@ -11,30 +11,42 @@ import { getDB } from "@/lib/db/connection";
 
 const db = getDB();
 
-// Fetch counts for the dashboard overview
-const destinationCountResult = await db
-  .prepare("SELECT COUNT(*) as count FROM destinations")
-  .first<{ count: number }>();
+let totalDestinations = 0;
+let publishedDestinations = 0;
+let draftDestinations = 0;
+let totalArticles = 0;
+let publishedArticles = 0;
+let draftArticles = 0;
 
-const publishedDestinationCountResult = await db
-  .prepare("SELECT COUNT(*) as count FROM destinations WHERE status = 'published'")
-  .first<{ count: number }>();
+if (db) {
+  try {
+    const destinationCountResult = await db
+      .prepare("SELECT COUNT(*) as count FROM packages")
+      .first<{ count: number }>();
 
-const blogCountResult = await db
-  .prepare("SELECT COUNT(*) as count FROM blog_articles")
-  .first<{ count: number }>();
+    const publishedDestinationCountResult = await db
+      .prepare("SELECT COUNT(*) as count FROM packages WHERE status = 'published'")
+      .first<{ count: number }>();
 
-const publishedBlogCountResult = await db
-  .prepare("SELECT COUNT(*) as count FROM blog_articles WHERE status = 'published'")
-  .first<{ count: number }>();
+    const blogCountResult = await db
+      .prepare("SELECT COUNT(*) as count FROM blog_articles")
+      .first<{ count: number }>();
 
-const totalDestinations = destinationCountResult?.count ?? 0;
-const publishedDestinations = publishedDestinationCountResult?.count ?? 0;
-const draftDestinations = totalDestinations - publishedDestinations;
+    const publishedBlogCountResult = await db
+      .prepare("SELECT COUNT(*) as count FROM blog_articles WHERE status = 'published'")
+      .first<{ count: number }>();
 
-const totalArticles = blogCountResult?.count ?? 0;
-const publishedArticles = publishedBlogCountResult?.count ?? 0;
-const draftArticles = totalArticles - publishedArticles;
+    totalDestinations = destinationCountResult?.count ?? 0;
+    publishedDestinations = publishedDestinationCountResult?.count ?? 0;
+    draftDestinations = totalDestinations - publishedDestinations;
+
+    totalArticles = blogCountResult?.count ?? 0;
+    publishedArticles = publishedBlogCountResult?.count ?? 0;
+    draftArticles = totalArticles - publishedArticles;
+  } catch (err) {
+    console.error("DB Error:", err);
+  }
+}
 ---
 
 <AdminLayout title="Dashboard">
@@ -43,7 +55,7 @@ const draftArticles = totalArticles - publishedArticles;
     <div>
       <h2 class="text-2xl font-bold text-gray-900">Selamat Datang</h2>
       <p class="mt-1 text-sm text-gray-600">
-        Ringkasan konten infotour.id
+        Ringkasan konten Alkhaleej Travel
       </p>
     </div>
 

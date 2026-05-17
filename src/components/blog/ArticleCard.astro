@@ -1,85 +1,35 @@
 ---
-/**
- * ArticleCard Component
- * Displays a blog article entry in the listing with title, excerpt,
- * publication date (formatted), and thumbnail.
- * Validates: Requirements 7.1, 7.2
- */
 import type { BlogArticle } from "@/lib/types";
-import type { Locale } from "@/lib/i18n/config";
-import { i18nConfig } from "@/lib/i18n/config";
-import { getTranslations } from "@/lib/i18n/utils";
 
 export interface Props {
   article: BlogArticle;
-  locale: Locale;
 }
 
-const { article, locale } = Astro.props;
-
-const prefix = i18nConfig.urlPrefix[locale];
-const articleUrl = `${prefix}/blog/${article.slug}`;
-const translations = getTranslations(locale);
-
-/**
- * Format publication date in a locale-appropriate way.
- */
-function formatDate(dateStr: string | null, locale: Locale): string {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  const localeStr = locale === "id" ? "id-ID" : "en-US";
-  return date.toLocaleDateString(localeStr, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-const formattedDate = formatDate(article.publishedAt, locale);
+const { article } = Astro.props;
 ---
 
-<a
-  href={articleUrl}
-  class="group block overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
->
-  {article.thumbnailUrl && (
-    <div class="aspect-video overflow-hidden">
-      <img
-        src={article.thumbnailUrl}
-        alt={article.title}
-        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        loading="lazy"
-      />
-    </div>
-  )}
-  <div class="p-4">
-    {formattedDate && (
-      <time
-        datetime={article.publishedAt ?? undefined}
-        class="text-xs text-muted-foreground"
-      >
-        {formattedDate}
-      </time>
+<a href={`/blog/${article.slug}/`} class="group block">
+  <div class="relative aspect-[16/10] rounded-[40px] overflow-hidden mb-8 shadow-xl transition-transform duration-500 group-hover:-translate-y-2 bg-[var(--cream-warm)]">
+    {article.thumbnailUrl ? (
+      <img src={article.thumbnailUrl} alt={article.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center">
+        <svg class="w-16 h-16 text-[var(--gold-deep)]/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
     )}
-    <h2 class="mt-1 text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
+    <div class="absolute inset-0 bg-gradient-to-t from-[var(--black-pearl)]/60 via-transparent to-transparent opacity-60"></div>
+  </div>
+  <div class="px-2">
+    <span class="text-[var(--gold-deep)] text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block">Artikel</span>
+    <h2 class="text-2xl font-extrabold text-[var(--black-pearl)] mb-4 group-hover:text-[var(--gold-deep)] transition-colors leading-tight">
       {article.title}
     </h2>
-    <p class="mt-2 text-sm text-muted-foreground line-clamp-3">
+    <p class="text-[var(--black-pearl)]/60 line-clamp-3 leading-relaxed mb-8">
       {article.excerpt}
     </p>
-    <span class="mt-3 inline-flex items-center text-sm font-medium text-primary">
-      {translations.common.readMore}
-      <svg
-        class="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
+    <span class="flex items-center text-[var(--black-pearl)] font-bold text-[10px] uppercase tracking-widest group-hover:translate-x-3 transition-transform duration-300">
+      Baca Selengkapnya
+      <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
     </span>
   </div>
 </a>

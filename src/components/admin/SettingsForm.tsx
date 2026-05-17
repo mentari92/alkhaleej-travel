@@ -211,10 +211,10 @@ export default function SettingsForm({ settings: initial }: Props) {
             <h3 className="font-semibold text-lg text-ocean-deep">Branding & General</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <Field label="Nama Brand (ID)" error={errors.brandNameId}>
-                <Input value={values.brandNameId} onChange={(v) => set("brandNameId", v)} onBlur={() => blur("brandNameId")} placeholder="infotour.id" />
+                <Input value={values.brandNameId} onChange={(v) => set("brandNameId", v)} onBlur={() => blur("brandNameId")} placeholder="Alkhaleej Travelindo Utama" />
               </Field>
               <Field label="Brand Name (EN)" error={errors.brandNameEn}>
-                <Input value={values.brandNameEn} onChange={(v) => set("brandNameEn", v)} placeholder="infotour.id" />
+                <Input value={values.brandNameEn} onChange={(v) => set("brandNameEn", v)} placeholder="Alkhaleej Travelindo Utama" />
               </Field>
               <Field label="Tagline (ID)" error={errors.taglineId}>
                 <Input value={values.taglineId} onChange={(v) => set("taglineId", v)} placeholder="Direktori wisata Indonesia terkurasi" />
@@ -231,7 +231,7 @@ export default function SettingsForm({ settings: initial }: Props) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <Field label="Copyright Text" error={errors.copyrightText}>
-                <Input value={values.copyrightText} onChange={(v) => set("copyrightText", v)} placeholder="© infotour.id. Semua hak dilindungi." />
+                <Input value={values.copyrightText} onChange={(v) => set("copyrightText", v)} placeholder="© Alkhaleej Travelindo Utama. Semua hak dilindungi." />
               </Field>
               <Field label="Footer Tagline (ID)" error={errors.footerTaglineId}>
                 <Input value={values.footerTaglineId ?? ""} onChange={(v) => set("footerTaglineId", v || null)} placeholder="Opsional" />
@@ -254,7 +254,7 @@ export default function SettingsForm({ settings: initial }: Props) {
               </Field>
               <Field label="Email Support" error={errors.supportEmail}>
                 <Input value={values.supportEmail} onChange={(v) => set("supportEmail", v)}
-                  onBlur={() => blur("supportEmail")} type="email" placeholder="halo@infotour.id" />
+                  onBlur={() => blur("supportEmail")} type="email" placeholder="fifi@travelindo-utama.com" />
               </Field>
               <Field label="Alamat" error={errors.address}>
                 <Input value={values.address ?? ""} onChange={(v) => set("address", v || null)} placeholder="Bali, Indonesia" />

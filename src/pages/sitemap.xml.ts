@@ -12,14 +12,14 @@ import { generateSitemap, type SitemapEntry } from "../lib/seo/sitemap";
 import type { HreflangEntry } from "../lib/types";
 import { getDB } from "../lib/db/connection";
 
-const SITE_URL = "https://infotour.id";
+const SITE_URL = "https://alkhaleejtravel.co.id";
 
 export const GET: APIRoute = async () => {
   const db = getDB();
 
   // Query all published destinations (only need slug and updated_at)
   const { results: destinations } = await db
-    .prepare("SELECT slug, updated_at FROM destinations WHERE status = 'published'")
+    .prepare("SELECT slug, updated_at FROM packages WHERE status = 'published'")
     .all<Pick<DestinationRow, "slug" | "updated_at">>();
 
   // Query all published blog articles (need id for paired article resolution)

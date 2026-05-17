@@ -146,7 +146,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       return context.redirect("/admin/login");
     }
 
-    const db = (env as unknown as { DB: D1Database }).DB;
+    const db = (env as any).DB as D1Database;
     const session = await validateSession(db, sessionId);
 
     if (!session) {
@@ -171,7 +171,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       let brandName = SiteSettingsDefaults.brandNameId;
       let supportEmail = SiteSettingsDefaults.supportEmail;
       try {
-        const db = (env as unknown as { DB: D1Database }).DB;
+        const db = (env as any).DB as D1Database;
         const settings = await getSiteSettings(db);
         brandName = pathname.startsWith("/en/") || pathname === "/en"
           ? settings.brandNameEn

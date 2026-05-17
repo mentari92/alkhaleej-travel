@@ -1,73 +1,68 @@
 ---
 /**
  * Header — Alkhaleej Travelindo Utama
- * Clean sticky header matching Google Stitch design.
+ * Clean sticky header matching the desired design.
  */
-import { getSiteSettings } from "@/lib/db/site-settings";
 import { SiteSettingsDefaults } from "@/lib/site-settings/defaults";
-import { getDB } from "@/lib/db/connection";
 
-const settings = await (async () => {
-  try {
-    const db = getDB();
-    return await getSiteSettings(db);
-  } catch {
-    return SiteSettingsDefaults;
-  }
-})();
+const settings = SiteSettingsDefaults;
 
 const navItems = [
-  { label: "Paket Umrah", href: "/packages" },
-  { label: "Haji Khusus", href: "/packages/haji-mujamalah" },
+  { label: "Home", href: "/" },
+  { label: "Paket Haji", href: "/paket/haji-mujamalah" },
+  { label: "Paket Umrah", href: "/paket/umrah" },
   { label: "Blog", href: "/blog" },
-  { label: "Tentang Kami", href: "/about" },
+  { label: "Tentang Kami", href: "/tentang-kami" },
 ];
+
+const currentPath = Astro.url.pathname;
 ---
 
-<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-surface-container-highest">
-  <div class="flex justify-between items-center max-w-7xl mx-auto px-6 lg:px-12 py-4">
-    <a href="/" class="flex items-center gap-2">
-      <img src="/logo.svg" alt="Alkhaleej Travelindo Utama" class="h-10 lg:h-11 w-auto" />
+<nav class="fixed top-0 w-full z-50 glass-header">
+  <div class="flex justify-between items-center max-w-7xl mx-auto px-6 lg:px-12 py-5">
+    <a href="/" class="flex items-center">
+      <img src="/logo-new.jpg" alt="Alkhaleej Travelindo Utama" class="h-10 lg:h-12 w-auto rounded-lg shadow-sm object-contain" />
     </a>
 
-    <div class="hidden md:flex space-x-6 items-center">
-      {navItems.map((item, i) => (
-        <a
-          href={item.href}
-          class:list={[
-            "text-xs uppercase tracking-wider font-semibold transition-colors",
-            i === 0
-              ? "text-gold-mid border-b-2 border-gold-mid pb-1"
-              : "text-navy-deep hover:text-gold-mid",
-          ]}
-        >
-          {item.label}
-        </a>
-      ))}
+    <div class="hidden md:flex space-x-10 items-center">
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              "text-[11px] uppercase tracking-[0.2em] font-bold transition-all hover:text-[var(--gold-mid)]",
+              isActive ? "text-[var(--gold-mid)]" : "text-[var(--navy-deep)]/70",
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })}
     </div>
 
     <a
       href={`https://wa.me/${settings.primaryWhatsappNumber}`}
-      class="hidden sm:inline-flex bg-navy-deep text-gold-mid px-6 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all active:scale-95"
+      class="hidden sm:inline-flex btn-premium-dark"
     >
       Hubungi Kami
     </a>
 
-    <button id="mobile-menu-btn" class="md:hidden p-2 text-navy-deep hover:bg-gray-100 rounded-lg" aria-label="Menu">
+    <button id="mobile-menu-btn" class="md:hidden p-2 text-[var(--navy-deep)]" aria-label="Menu">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </button>
   </div>
 
-  <div id="mobile-menu" class="hidden md:hidden border-t border-surface-container-highest bg-white">
-    <div class="px-6 py-4 space-y-1">
+  <div id="mobile-menu" class="hidden md:hidden border-t border-black/5 bg-white shadow-2xl">
+    <div class="px-6 py-8 space-y-4">
       {navItems.map((item) => (
-        <a href={item.href} class="block px-4 py-3 text-sm font-medium text-navy-deep hover:text-gold-mid hover:bg-amber-50 rounded-lg transition">
+        <a href={item.href} class="block text-sm font-bold uppercase tracking-widest text-[var(--navy-deep)] hover:text-[var(--gold-mid)]">
           {item.label}
         </a>
       ))}
-      <a href={`https://wa.me/${settings.primaryWhatsappNumber}`} class="block px-4 py-3 text-sm font-semibold text-gold-mid bg-navy-deep rounded-lg mt-2 text-center">
+      <a href={`https://wa.me/${settings.primaryWhatsappNumber}`} class="block btn-premium-dark w-full text-center mt-6">
         WhatsApp Kami
       </a>
     </div>
@@ -79,3 +74,4 @@ const navItems = [
   const menu = document.getElementById('mobile-menu');
   btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
 </script>
+

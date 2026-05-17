@@ -1,257 +1,111 @@
 ---
-export const prerender = false;
+import "@/styles/globals.css";
+
+const errorMessage = Astro.url.searchParams.get("error");
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Admin infotour.id</title>
-  <meta name="robots" content="noindex, nofollow">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Admin - Alkhaleej Travel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  </head>
+  <body class="min-h-screen flex items-center justify-center bg-[#fbf9f5] font-sans p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 border border-[#efeeea]">
+      <div class="text-center mb-8">
+        <div class="text-2xl font-bold text-[#0F0F1B] mb-2">Alkhaleej Travelindo Utama</div>
+        <p class="text-[#504537] text-sm">Masuk ke panel admin</p>
+      </div>
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f3f4f6;
-      padding: 1rem;
-    }
+      {errorMessage && (
+        <div class="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium mb-6 flex items-start gap-3">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+          <p>{errorMessage}</p>
+        </div>
+      )}
 
-    .login-card {
-      width: 100%;
-      max-width: 400px;
-      background: #ffffff;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      padding: 2rem;
-    }
+      <div id="error-box" class="hidden bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium mb-6 flex items-start gap-3">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+        <p id="error-msg"></p>
+      </div>
 
-    .login-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+      <form id="login-form" class="space-y-6">
+        <div>
+          <label for="username" class="block text-sm font-bold text-[#0F0F1B] mb-2">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            class="w-full bg-[#fbf9f5] border border-[#e4e2de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6A554] focus:ring-1 focus:ring-[#C6A554] transition-colors"
+            placeholder="admin"
+          />
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-bold text-[#0F0F1B] mb-2">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="w-full bg-[#fbf9f5] border border-[#e4e2de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6A554] focus:ring-1 focus:ring-[#C6A554] transition-colors"
+            placeholder="••••••••"
+          />
+        </div>
 
-    .login-header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 0.5rem;
-    }
-
-    .login-header p {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 0.375rem;
-    }
-
-    .form-group input {
-      width: 100%;
-      min-height: 44px;
-      padding: 0.625rem 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .form-group input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
-    }
-
-    .form-group input.input-error {
-      border-color: #dc2626;
-    }
-
-    .error-message {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      background-color: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 0.5rem;
-      color: #dc2626;
-      font-size: 0.875rem;
-      text-align: center;
-    }
-
-    .error-message.visible {
-      display: block;
-    }
-
-    .submit-btn {
-      width: 100%;
-      min-height: 44px;
-      padding: 0.75rem 1rem;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #ffffff;
-      background-color: #2563eb;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-
-    .submit-btn:hover {
-      background-color: #1d4ed8;
-    }
-
-    .submit-btn:focus-visible {
-      outline: 2px solid #2563eb;
-      outline-offset: 2px;
-    }
-
-    .submit-btn:disabled {
-      background-color: #93c5fd;
-      cursor: not-allowed;
-    }
-  </style>
-</head>
-<body>
-  <div class="login-card">
-    <div class="login-header">
-      <h1>Admin Login</h1>
-      <p>Masuk ke dashboard infotour.id</p>
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full bg-[#1B4332] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#143528] transition-all active:scale-[0.98]"
+        >
+          Masuk
+        </button>
+      </form>
     </div>
 
-    <form id="login-form" novalidate>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          autocomplete="username"
-          required
-        />
-      </div>
+    <script>
+      const form = document.getElementById('login-form') as HTMLFormElement;
+      const errorBox = document.getElementById('error-box')!;
+      const errorMsg = document.getElementById('error-msg')!;
+      const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          autocomplete="current-password"
-          required
-        />
-      </div>
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = (document.getElementById('username') as HTMLInputElement).value;
+        const password = (document.getElementById('password') as HTMLInputElement).value;
 
-      <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+        errorBox.classList.add('hidden');
+        submitBtn.textContent = 'Memproses...';
+        submitBtn.disabled = true;
 
-      <button type="submit" class="submit-btn" id="submit-btn">
-        Masuk
-      </button>
-    </form>
-  </div>
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
 
-  <script>
-    const form = document.getElementById('login-form') as HTMLFormElement;
-    const usernameInput = document.getElementById('username') as HTMLInputElement;
-    const passwordInput = document.getElementById('password') as HTMLInputElement;
-    const errorMessage = document.getElementById('error-message') as HTMLDivElement;
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+          const data = await res.json();
 
-    function showError(message: string) {
-      errorMessage.textContent = message;
-      errorMessage.classList.add('visible');
-    }
-
-    function hideError() {
-      errorMessage.textContent = '';
-      errorMessage.classList.remove('visible');
-    }
-
-    function clearInputErrors() {
-      usernameInput.classList.remove('input-error');
-      passwordInput.classList.remove('input-error');
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      hideError();
-      clearInputErrors();
-
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value;
-
-      // Client-side validation
-      if (!username) {
-        usernameInput.classList.add('input-error');
-        showError('Username harus diisi');
-        usernameInput.focus();
-        return;
-      }
-
-      if (!password) {
-        passwordInput.classList.add('input-error');
-        showError('Password harus diisi');
-        passwordInput.focus();
-        return;
-      }
-
-      // Disable button during request
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Memproses...';
-
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          window.location.href = '/admin';
-          return;
-        }
-
-        // Handle error response
-        if (data.error) {
-          if (data.error.code === 'INVALID_CREDENTIALS') {
-            showError('Username atau password salah');
-            usernameInput.classList.add('input-error');
-            passwordInput.classList.add('input-error');
-          } else if (data.error.code === 'MISSING_FIELDS') {
-            showError(data.error.message || 'Username dan password harus diisi');
+          if (data.success) {
+            window.location.href = '/admin';
           } else {
-            showError(data.error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+            errorMsg.textContent = data.error?.message || 'Login gagal';
+            errorBox.classList.remove('hidden');
           }
-        } else {
-          showError('Terjadi kesalahan. Silakan coba lagi.');
+        } catch (err) {
+          errorMsg.textContent = 'Terjadi kesalahan. Coba lagi.';
+          errorBox.classList.remove('hidden');
+        } finally {
+          submitBtn.textContent = 'Masuk';
+          submitBtn.disabled = false;
         }
-      } catch {
-        showError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Masuk';
-      }
-    });
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>
